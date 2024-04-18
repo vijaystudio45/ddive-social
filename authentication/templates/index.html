@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% load static %} {% block content %} {% block css %}
+{% endblock %}
+
+<script>
+  var defaultThemeMode = "light";
+  var themeMode;
+  if (document.documentElement) {
+    if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+      themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+    } else {
+      if (localStorage.getItem("data-bs-theme") !== null) {
+        themeMode = localStorage.getItem("data-bs-theme");
+      } else {
+        themeMode = defaultThemeMode;
+      }
+    }
+    if (themeMode === "system") {
+      themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    document.documentElement.setAttribute("data-bs-theme", themeMode);
+  }
+</script>
+<style>
+  @media only screen and (min-width: 320px) and (max-width: 767px) {
+    h2.Socialtitle {
+    font-size: 24px !important;
+    margin: 0 0 28px !important;
+} 
+.Socialtitle1 {
+  font-size: 24px !important;
+}
+  }
+</style>
+
+<div class="py-20 main-home-content">
+  <div class="container mx-auto px-6 flex w-full">
+    <div class="w-1/2 home-page-section-view-logo-content">
+      <div>
+        <h2 class=" Socialtitle text-6xl font-bold mb-16" style="color: #2ec9eb">dDive Social</h2>
+        <h3 class="text-5xl font-semibold home-content-data Socialtitle1">
+          Social Media &
+        </h3>
+        <h3 class="text-5xl mb-10 font-semibold home-content-data Socialtitle1">
+          Content Platform
+        </h3>
+        <button class="read-more-btn-section font-medium flex">
+          See your content pipeline
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"
+            style="
+    margin-left: 22px;
+">
+            <rect width="256" height="256" fill="none"></rect>
+            <line x1="40" y1="128" x2="216" y2="128" fill="none" stroke="currentColor" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="16"></line>
+            <polyline points="144 56 216 128 144 200" fill="none" stroke="currentColor" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="16"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="home-page-section-view-logo w-1/2">
+      <img src="{% static 'assets/media/images/hoempagesocailAi.svg' %} " class="img-logo-social-icons-home-ai"
+        alt="..." />
+    </div>
+  </div>
+</div>
+
+{% endblock %}

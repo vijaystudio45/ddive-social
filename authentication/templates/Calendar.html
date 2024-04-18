@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<style>
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+    .Calendarsec {
+    overflow: scroll !important;
+}
+}
+    [x-cloak] {
+        display: none;
+    }
+    h1.heading-calender-view-content {
+    font-weight: bold;
+    font-size: 40px;
+    font-family: 'FontAwesome';
+    text-align: center;
+    padding-top: 30px;
+}
+.heading-calender-view {
+    background: #dbe0e2;
+}
+.Calendarsec {
+    background: #fff;
+}
+.main-section-post {
+    display: flex;
+    justify-content: center;
+    align-items: unset !important;
+    width: 100%;
+
+    background: #dbe0e2;
+
+}
+.Calendartop {
+    padding-bottom: 15px;
+}
+.icondiv {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="heading-calender-view">
+    <h1 class="heading-calender-view-content Calendartop">
+        Calendar
+    </h1>
+</div>
+<div class="main-section-post">
+    
+    <div class="antialiased sans-serif  Calendarsec">
+        
+        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak class="show-calendar-section-disp">
+            <div class="container mx-auto px-4 py-2 md:py-10 calendarsec">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="flex items-center justify-between py-2 px-6">
+                        <div>
+                            <span x-text="MONTH_NAMES[month]" class="text-lg font-bold text-gray-800"></span>
+                            <span x-text="year" class="ml-1 text-lg text-gray-600 font-normal"></span>
+                        </div>
+                        <div class="border rounded-lg px-1" style="padding-top: 2px;">
+                            <button 
+                                type="button"
+                                class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center" 
+                                :class="{'cursor-not-allowed opacity-25': month == 0 }"
+                                :disabled="month == 0 ? true : false"
+                                @click="month--; getNoOfDays()">
+                                <svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>  
+                            </button>
+                            <div class="border-r inline-flex h-6"></div>		
+                            <button 
+                                type="button"
+                                class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1" 
+                                :class="{'cursor-not-allowed opacity-25': month == 11 }"
+                                :disabled="month == 11 ? true : false"
+                                @click="month++; getNoOfDays()">
+                                <svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>									  
+                            </button>
+                        </div>
+                    </div>	
+    
+                    <div class="-mx-1 -mb-1">
+                        <div class="flex flex-wrap" style="margin-bottom: -40px;">
+                            <template x-for="(day, index) in DAYS" :key="index">	
+                                <div style="width: 14.26%" class="px-2 py-2">
+                                    <div
+                                        x-text="day" 
+                                        class="text-gray-600 text-sm uppercase tracking-wide font-bold text-center"></div>
+                                </div>
+                            </template>
+                        </div>
+    
+                        <div class="flex flex-wrap border-t border-l">
+                            <template x-for="blankday in blankdays">
+                                <div 
+                                    style="width: 14.28%; height: 120px"
+                                    class="text-center border-r border-b px-4 pt-2"	
+                                ></div>
+                            </template>	
+                            <template x-for="(date, dateIndex) in no_of_days" :key="dateIndex">	
+                                <div style="width: 14.28%; height: 120px" class="px-4 pt-2 border-r border-b relative">
+                                    <div
+                                        x-text="date"
+                                        class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100"
+                                        :class="{'bg-blue-500 text-white': isToday(date) == true, 'text-gray-700 hover:bg-blue-200': isToday(date) == false }"	
+                                    ></div>
+                                    <div style="height: 80px;" class="overflow-y-auto mt-1">
+                                        <template x-for="event in events.filter(e => new Date(e.event_date).toDateString() ===  new Date(year, month, date).toDateString() )">	
+                                            <div
+                                                class="px-2 py-1 rounded-lg mt-1 overflow-hidden border"
+                                                :class="{
+                                                    'border-blue-200 text-blue-800 bg-blue-100': event.event_theme === 'blue',
+                                                    'border-red-200 text-red-800 bg-red-100': event.event_theme === 'red',
+                                                    'border-yellow-200 text-yellow-800 bg-yellow-100': event.event_theme === 'yellow',
+                                                    'border-green-200 text-green-800 bg-green-100': event.event_theme === 'green',
+                                                    'border-purple-200 text-purple-800 bg-purple-100': event.event_theme === 'purple'
+                                                }"
+                                                @click="showEventModal(event)"
+                                            >
+                                                <p x-text="event.event_title" class="text-sm truncate leading-tight display-the-content-on-calendar"></p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Modal -->
+            <div style=" background-color: rgba(0, 0, 0, 0.8)" class="fixed z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="openEventModal">
+                <div class="p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-hidden mt-17">
+                    <div class="shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer"
+                        x-on:click="openEventModal = !openEventModal">
+                        <svg class="fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path
+                                d="M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z" />
+                        </svg>
+                    </div>
+    
+                    <div class="shadow w-full rounded-lg bg-white overflow-hidden w-full block p-8 h-[32rem] overflow-y-auto">
+                        <!-- <h2 class="font-bold text-2xl mb-6 text-gray-800 border-b pb-2">Event Details</h2> -->
+                        <div class="mt-4 flex justify-center" x-show="event_image">
+                            <img :src="event_image" alt="Event Image" style="width: 120px;height: 120px; border-radius: 50%;" class="max-w-full h-auto">
+                        </div>
+                        <p class="text-center text-3xl pt-2 pb-4 text-[#174c6e;]"> <span x-text="event_title"></span></p>
+                        <div class="grid grid-cols-2">
+                            <div class="text-center">
+                                <p class="pb-1">Date:</p>
+                        <p class="text-lg"> <span x-text="event_date"></span></p>
+                    </div>
+                        <div class="text-center">
+                            <p class="pb-1">Status :</p>
+                        <button type="button" class="bg-white hover:bg-gray-100 text-gray-700  py-1 px-6 border border-gray-300 rounded-lg shadow-sm" disabled>
+                            <span x-text="event_status"></span>
+                        </button>	
+                    </div>
+                    </div>
+                    <div class="text-center pt-4">
+                        <p>
+                            Channel
+                        </p>
+                        <p>
+                            <div class="icondiv">
+                                <div  x-show="event_channel.includes('LinkedIn')">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 22px;">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z" fill="#374151"></path>
+                                            <path d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z" fill="#374151"></path>
+                                            <path d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z" fill="#374151"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z" fill="#374151"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div x-show="event_channel.includes('Instagram')">
+                                    <svg fill="#374151" viewBox="0 0 32 32"
+                                    xmlns="http://www.w3.org/2000/svg" style="width: 28px;">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                        stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z">
+                                        </path>
+                                        <path
+                                            d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z">
+                                        </path>
+                                    </g>
+                                </svg>
+                                </div>
+                                <div  x-show="event_channel.includes('Facebook')">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                    style="width: 20px">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                        stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                            fill="#374151"></path>
+                                    </g>
+                                </svg>
+                                </div>
+                            </div>
+                            
+                        </p>
+                    </div>
+                        
+                        <div class="mt-8 text-right">
+                            <!-- <button type="button" class="bg-[#174c6e;] hover:bg-gray-100 text-white font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2" @click="openEventModal = !openEventModal">
+                                Cancel
+                            </button>	 -->
+                            <button type="button" class="bg-[#174c6e;] hover:bg-gray-100 hover:text-black text-white font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2" @click="openEventModal = !openEventModal">
+                                <a :href="'/post-view/' + id + '/'">Open</a>
+                            </button>	
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Modal -->
+        </div>
+    </div>
+</div>
+<script>
+    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    function app() {
+        return {
+            month: '',
+            year: '',
+            no_of_days: [],
+            blankdays: [],
+            days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            events: [],
+            event_title: '',
+            event_image:'',
+            id:'',
+            event_date: '',
+            event_channel:[],
+            event_status:'',
+            event_theme: 'blue',
+            openEventModal: false,
+
+            async initDate() {
+                let today = new Date();
+                this.month = today.getMonth();
+                this.year = today.getFullYear();
+                this.datepickerValue = new Date(this.year, this.month, today.getDate()).toDateString();
+                await this.fetchEvents();
+                this.getNoOfDays();
+            },
+
+            async fetchEvents() {
+    try {
+        const response = await fetch('https://ddivesocial.com/posts/');
+        if (!response.ok) {
+            throw new Error('Failed to fetch events');
+        }
+        const data = await response.json();
+        this.events = data.events;
+        console.log("data.events;---------------------",data.events)
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+},
+
+            isToday(date) {
+                const today = new Date();
+                const d = new Date(this.year, this.month, date);
+                return today.toDateString() === d.toDateString();
+            },
+
+            // showEventModal(event) {
+            //     const clickedEvent = this.events.find(e => e.id === event.id);
+            //     if (clickedEvent) {
+            //         this.openEventModal = true;
+            //         this.event_title = clickedEvent.event_title;
+            //         this.event_date = clickedEvent.event_date;
+            //         this.event_image = clickedEvent.event_image; 
+            //         this.id = clickedEvent.id;
+
+
+            //         // You can add more event details if needed
+            //     }
+            // },
+                showEventModal(event) {
+                const clickedEvent = this.events.find(e => e.id === event.id);
+                if (clickedEvent) {
+                    this.openEventModal = true;
+                    this.event_title = clickedEvent.event_title;
+                    this.event_date = clickedEvent.event_date;
+                    this.event_image = clickedEvent.event_image; // Make sure event_image is properly set
+                    this.event_channel = clickedEvent.event_channel; 
+                    this.event_status = clickedEvent.event_status; 
+                    this.id = clickedEvent.id;
+                        }
+                    },
+
+            getNoOfDays() {
+                let daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+                let dayOfWeek = new Date(this.year, this.month).getDay();
+                let blankdaysArray = [];
+                for (var i = 1; i <= dayOfWeek; i++) {
+                    blankdaysArray.push(i);
+                }
+
+                let daysArray = [];
+                for (var i = 1; i <= daysInMonth; i++) {
+                    daysArray.push(i);
+                }
+
+                this.blankdays = blankdaysArray;
+                this.no_of_days = daysArray;
+            }
+        }
+    }
+</script>
+
+{% endblock %}

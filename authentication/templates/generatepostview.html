@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<style>
+    @media only screen and (min-width: 320px) and (max-width: 767px) {
+
+        .image-title-contnent-second {
+    padding-left: 0 !important;
+  
+}  
+    }
+</style>
+<div class=" items-center justify-between mx-auto  generate-post-view-sections_new">
+    <div class="card">
+        <div class="main-card-sections">
+            <div>
+                <div class="show-input-sections-view">
+                    <!-- <div class="create-post-heading">
+                        <p class="create-header">VIEW POST</p>
+                    </div> -->
+                    <div class="image-title-contnent">
+                        <div class="view-image-sections-show">
+
+                            {% if item.image %}
+                            <img class="image-in-veiw-sections" src="{{ item.image.url }}" alt="{{ item.title }}">
+                            {% endif %}
+                            {% if item.generated_image %}
+                            <img class="image-in-veiw-sections" src="{{ item.generated_image }}" alt="{{ item.title }}">
+                            {% endif %}
+                            {% if item.fb_video %}
+                                <video controls class="video-in-view-sections">
+                                    <source src="{{ item.fb_video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                        </div>
+                        <div class="image-title-contnent-second">
+                            <div class="image-title-contnent-second-child">
+                                <div>
+                                    <p class="view-name-sections">{{ item.name }}</p>
+                                    <div class="mb-4">
+                                        <p class="status-heading-status">CHANNELS</p>
+                                        <div>
+                                            {% if 'LinkedIn' in item.channel %}
+                                            <div class="flex items-center my-1.5">
+                                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                    style="width: 20px;">
+                                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                        stroke-linejoin="round"></g>
+                                                    <g id="SVGRepo_iconCarrier">
+                                                        <path
+                                                            d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z"
+                                                            fill="#374151"></path>
+                                                        <path
+                                                            d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z"
+                                                            fill="#374151"></path>
+                                                        <path
+                                                            d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z"
+                                                            fill="#374151"></path>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                            fill="#374151"></path>
+                                                    </g>
+                                                </svg>
+                                                <p>&nbsp;-&nbsp;</p>
+                                                <p>{{item.linkedin_page_name}}</p>
+                                            </div>
+                                            {% endif %}
+
+                                            {% if 'Facebook' in item.channel %}
+                                            <div class="flex items-center my-1.5">
+                                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                    style="width: 20px">
+                                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                        stroke-linejoin="round"></g>
+                                                    <g id="SVGRepo_iconCarrier">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                            fill="#374151"></path>
+                                                    </g>
+                                                </svg>
+                                                <p>&nbsp;-&nbsp;</p>
+                                                <p>{{item.fb_page_name}}</p>
+                                            </div>
+                                            {% endif %}
+
+                                            {% if 'Instagram' in item.channel %}
+                                            <div class="flex items-center  mb-1.5">
+                                                <svg fill="#374151" viewBox="0 0 32 32"
+                                                    xmlns="http://www.w3.org/2000/svg" style="width: 28px;margin-left: -5px;">
+                                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                        stroke-linejoin="round"></g>
+                                                    <g id="SVGRepo_iconCarrier">
+                                                        <path
+                                                            d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z">
+                                                        </path>
+                                                        <path
+                                                            d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <p>&nbsp;-&nbsp;</p>
+                                                <p>{{item.Instagram_page_name}}</p>
+                                            </div>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <p class="status-heading-status">Topic</p>
+                                        <div>
+                                            <!-- <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Status</button> -->
+                                            <!-- <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    edit</button> -->
+
+                                            <!-- <a href="{% url 'update-generated-post' item.pk %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Edit</a> -->
+                                            <p>{{ item.description }}</p>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pus_div">
+                                    <div class=" post-date-sections mb-4">
+                                        <label for="exampleInputEmail1" class="status-heading-status">PUBLISH
+                                            DATE</label>
+                                        <p>{{ item.post_date }}</p>
+                                    </div>
+                                    <div class="">
+                                        <p class="status-heading-status">STATUS</p>
+                                        <p>{{item.post_status}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-4 mt-8">
+                        {% if item.generated_fb_post != '(None,)' and item.generated_fb_post != 'None' and item.generated_fb_post != None  %}
+                        <div class="view-social-section-view">
+                            <!-- <div class="flex">
+                                    <div class="w-1/2 text-right">
+                                        <i class="fa fa-facebook-square" style="font-size:24px; color:blue;"></i>
+                                    </div>
+                                    <div class="w-1/2 text-right">
+                                         <i class="fa fa-pencil"></i>
+                                     </div>
+                                </div> -->
+
+                            <div class="text-center pt-6">
+                                <i class="fa fa-facebook-square"
+                                    style="font-size:42px; color:blue; border-radius: 7px;"></i>
+                            </div>
+                            <p class="content-social-media-display-section">{{ item.generated_fb_post }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if item.generated_insta_post != '(None,)' and item.generated_insta_post != 'None' and item.generated_insta_post != None %}
+                        <div class="view-social-section-view">
+                            <div class="text-center pt-6">
+                                <i class="fa fa-instagram"
+                                    style="font-size:40px; color:red; padding: 9px; border-radius: 7px;"></i>
+                            </div>
+
+                            <!-- <div class="flex">
+                                    <div class="w-1/2 text-right">
+                                     <i class="fa fa-instagram" style="font-size:24px; color:red;"></i>
+                                    </div>
+                                    <div class="w-1/2 text-right">
+                                         <i class="fa fa-pencil"></i>
+                                     </div>
+                                </div> -->
+                            <p class="content-social-media-display-section">{{ item.generated_insta_post }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if item.generated_linkedin_post != '(None,)' and item.generated_linkedin_post != 'None' and item.generated_linkedin_post != None %}
+                        <div class="view-social-section-view">
+                            <div class="text-center pt-6">
+                                <i class="fa fa-linkedin"
+                                    style="font-size:24px; color:white; background: blue; padding: 9px; border-radius: 7px; "></i>
+                            </div>
+
+                            <!-- <div class="flex">
+                                    <div class="w-1/2 text-right">
+                                        <i class="fa fa-linkedin" style="font-size:24px; color:white;"></i>
+                                    </div>
+                                    <div class="w-1/2 text-right">
+                                         <i class="fa fa-pencil"></i>
+                                     </div>
+                                </div> -->
+                            <p class="content-social-media-display-section">{{ item.generated_linkedin_post }}</p>
+                        </div>
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

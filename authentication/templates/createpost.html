@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="main-section-post">
+    <div class="card mb-3">
+        <div class="main-card-sections">
+            <div>
+                <div class="show-input-sections">
+                    <div class="create-post-heading">
+                        <p class="create-header">Create Post</p>
+
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <div>
+                                <div class="mb-10">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1" style="margin-bottom: 10px;">Title</label>
+                                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp" placeholder="Enter Title" required />
+                                </div>
+                                <div class="mb-10">
+                                    <label for="exampleInputEmail1" class="block text-gray-700 text-sm font-bold mb-2">Post Date</label>
+                                    <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="post_date"
+                                        value="{{ item.post_date|date:'Y-m-d' }}" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp" placeholder="Enter Post Date" />
+                                </div>
+                                <div class="mb-10">
+                                    <label for="exampleFormControlTextarea1" class="block text-gray-700 text-sm font-bold mb-2"
+                                        style="margin-bottom: 10px;">Description</label>
+                                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" id="exampleFormControlTextarea1"
+                                        rows="5" placeholder="Enter Description"></textarea>
+                                </div>
+                                <div class="mb-10">
+                                    <label for="exampleFormControlTextarea1" class="block text-gray-700 text-sm font-bold mb-2"
+                                        style="margin-bottom: 10px;">Channels</label><br>
+                                    <select id="option" name="option" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                        <option value="LinkedIn" {% if 'LinkedIn' in item.option %} selected {% endif %}>
+                                            LinkedIn
+                                        </option>
+                                        <option value="Instagram" {% if 'Instagram' in item.option %} selected {% endif %}>
+                                            Instagram
+                                        </option>
+                                        <option value="Facebook" {% if 'Facebook' in item.option %} selected {% endif %}>
+                                            Facebook
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-10">
+                                    <label for="page_id" class="block text-gray-700 text-sm font-bold mb-2">Select Page:</label>
+                                    <select id="page_id" name="page_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                        {% for account in accounts %}
+                                            <option value="{{ account.id }}">{{account.name}}---{{account.id}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-10">
+                                    <label for="formFile" class="block text-gray-700 text-sm font-bold mb-2" style="margin-bottom: 10px;">Image</label>
+                                    <input class="shadow appearance-none border rounded w-full  bg-white  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="file" name="image" id="formFile" required />
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btnsection-for-submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

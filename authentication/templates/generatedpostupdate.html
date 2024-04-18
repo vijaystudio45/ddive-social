@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="main-section-post-update">
+
+    <div class="card w-full">
+        <div class="main-card-sections-update-section-show">
+            <div class="show-input-sections">
+                <div class="create-post-heading">
+                    <p class="create-header">Update Post</p>
+                </div>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div>
+                        <div class="md:flex">
+
+<!-- ----------------------------------------------------------------- first section ------------------------------------------------------------------------------ -->
+                            <div class="m-4 mt-12 md:w-1/2">
+                             
+
+                                <div class="mb-6 flex">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1"
+                                        style="margin-bottom: 10px; width: 50px;">Name : </label>
+                                    <!-- <input type="text"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        name="name" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                        placeholder="Enter Title" value="{{ item.name }}" disabled /> -->
+                                        <p class="name-section-update-section" style=" width: 100%;">
+                                            {{ item.name }}
+                                        </p>
+                                </div>
+
+                                <div class="mb-6 flex">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2"
+                                        for="exampleFormControlTextarea1" style="margin-bottom: 10px; width: 50px;">Topic : </label>
+                                    <!-- <textarea
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        name="description" id="exampleFormControlTextarea1" rows="5"
+                                        placeholder="Enter the topic the post you want to be generated."
+                                        disabled>{{ item.description }}</textarea> -->
+                                        <p class="name-section-update-section " style=" width: 100%;">
+                                            {{ item.description }}
+                                        </p>
+                                </div>
+
+                                <div class="mb-6">
+                                    <p class="block text-gray-700 text-sm font-bold mb-2" for="option"
+                                        style="margin-bottom: 10px;">Channels :</p>
+                                    {% if item.page_id %}
+                                    <div class="update-view-post-sections">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            style="width: 34px;margin-right: 14px;">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                    fill="#374151"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- <input type="text"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            name="page_id" id="facebook_page_id" aria-describedby="emailHelp"
+                                            placeholder="Page ID" value="{{ item.fb_page_name }}" disabled /> -->
+                                            <p class="update-disply-post-update">
+                                                {{ item.fb_page_name }}
+                                            </p>
+                                    </div>
+                                    {% endif %}
+
+
+                                    {% if item.linkedin_page_id %}
+                                    <div class="update-view-post-sections">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            style="width: 34px;margin-right: 14px;">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z"
+                                                    fill="#374151"></path>
+                                                <path
+                                                    d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z"
+                                                    fill="#374151"></path>
+                                                <path
+                                                    d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z"
+                                                    fill="#374151"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                    fill="#374151"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- <input type="text"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            name="linkedin_page_id" id="linkedin_page_id" aria-describedby="emailHelp"
+                                            placeholder="Page ID" value="{{ item.linkedin_page_name }}" disabled /> -->
+                                            <p class="update-disply-post-update">
+                                                {{ item.linkedin_page_name }}
+                                            </p>
+                                    </div>
+                                    {% endif %}
+                                    {% if item.Instagram_page_name %}
+                                    <div class="update-view-post-sections">
+                                        <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            style="width: 34px;margin-right: 14px;">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                    fill="#374151"></path>
+                                            </g>
+                                        </svg> -->
+                                        <svg fill="#374151" viewBox="0 0 32 32"
+                                        xmlns="http://www.w3.org/2000/svg"   style="width: 45px; margin-right: 10px; margin-left: -5px; margin-top: -5px;">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                            stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path
+                                                d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z">
+                                            </path>
+                                            <path
+                                                d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                        <!-- <input type="text"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            name="page_id" id="facebook_page_id" aria-describedby="emailHelp"
+                                            placeholder="Page ID" value="{{ item.fb_page_name }}" disabled /> -->
+                                            <p class="update-disply-post-update">
+                                                {{ item.Instagram_page_name }}
+                                            </p>
+                                    </div>
+                                    {% endif %}
+
+
+                                </div>
+                                
+
+
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2"
+                                        for="exampleInputEmail2">Post Date and Time :</label>
+                                    <input type="datetime-local"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        name="post_date" value="{{ item.post_date|date:'Y-m-d\TH:i:s' }}"
+                                        id="exampleInputEmail2" aria-describedby="emailHelp"
+                                        placeholder="Enter Post Date and Time" />
+                                </div>
+
+
+                           
+
+                                <div class="mb-10">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2 section-marging-2" for="post_status">Select status :</label>
+                                    <select id="post_status" name="post_status" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                        {% if item.post_status %}
+                                            {% if item.post_status == "Approve" %}
+                                                <option value="Approve" selected>Approve</option>
+                                                <option value="Inprogress">In Inprogress</option>
+                                            {% else %}
+                                                <option value="Inprogress" selected>Inprogress</option>
+                                                <option value="Approve">Approve</option>
+                                            {% endif %}
+                                        {% else %}
+                                            <option value="Approve">Approve</option>
+                                            <option value="Inprogress">Inprogress</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+
+
+                            </div>
+<!-- ------------------------------------------------------------------ second section --------------------------------------------------------- -->
+                            <div class="m-4 md:w-1/2">
+                                   
+                                {% if item.image %}
+                                <div class="loader" style="display: none; color: blue; font-size: 35px;">Loading...
+                                </div>
+                                <div class="update-video-sections-show">
+                                    <img class="show-video-and-image-in-update" src="{{ item.image.url }}" alt="{{ item.title }}">
+                                </div>
+                                {% endif %}
+
+                                {% if item.generated_image %}
+                                <div class="loader" style="display: none; color: blue; font-size: 35px;">Loading...
+                                </div>
+                                <div class="update-video-sections-show">
+                                    <img class="show-video-and-image-in-update" src="{{ item.generated_image }}" alt="{{ item.title }}">
+                                </div>
+                                {% endif %}
+
+                                {% if item.fb_video %}
+                                <div class="loader" style="display: none; color: blue; font-size: 35px;">Loading...
+                                </div>
+                                <div class="update-video-sections-show">
+                                    <video class="show-video-and-image-in-update" controls>
+                                        <source src="{{ item.fb_video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                {% endif %}
+
+                                    
+
+                             
+                                <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="media">Media :</label>
+                                <input
+                                    class="shadow appearance-none border rounded w-full bg-white py-2 px-3 mb-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    type="file" id="media" name="media">
+                                </div>
+                                
+                        {% if item.generated_fb_post and item.generated_fb_post != '(None,)' %}
+                        <div class="mb-1">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="generated_fb_post"
+                                style="margin-bottom: 10px;">Generated Facebook Post :</label>
+                            <textarea
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                name="generated_fb_post" id="generated_fb_post" rows="5"
+                                placeholder="Enter generated Facebook post">{{ item.generated_fb_post }}</textarea>
+                        </div>
+                        {% endif %}
+
+                        {% if item.generated_insta_post and item.generated_insta_post != '(None,)' %}
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="generated_insta_post"
+                                style="margin-bottom: 10px;">Generated Instagram Post :</label>
+                            <textarea
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                name="generated_insta_post" id="generated_insta_post" rows="5"
+                                placeholder="Enter generated Instagram post">{{ item.generated_insta_post }}</textarea>
+                        </div>
+                        {% endif %}
+
+                        {% if item.generated_linkedin_post and item.generated_linkedin_post != '(None,)' %}
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="generated_linkedin_post"
+                                style="margin-bottom: 10px;">Generated LinkedIn
+                                Post :</label>
+                            <textarea
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                name="generated_linkedin_post" id="generated_linkedin_post" rows="5"
+                                placeholder="Enter generated LinkedIn post">{{ item.generated_linkedin_post }}</textarea>
+                        </div>
+                        {% endif %}
+                            </div>
+                        </div>
+                        <div class="update-image-sections-show-new"></div>
+                        <div class="update-video-sections-show-new"></div>
+
+                    </div>
+
+
+                    <div  class="button-update-submit-cancel">
+                        <button type="submit" class="btnsection-for-submit_">Submit</button>
+                        <button class="btnsection-for-submit_1"><a href="{% url 'generated-list' %}">Cancel</a></button>
+
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $(document).ready(function () {
+        $('#media').on('change', function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                $('.loader').show(); // Show loader while processing the file
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.loader').hide(); // Hide loader after file is loaded
+                    if (file.type.startsWith('image/')) {
+                        // Image file
+                        var img = $('<img>').attr('src', e.target.result).width('300px').height('250px');
+                        var $imageContainer = $('.update-video-sections-show');
+                        if ($imageContainer.length) {
+                            var currentContent = $imageContainer.html(); // Store current content
+                            $imageContainer.empty().append(img);
+                            Swal.fire({
+                                title: "Do you want to update the selected image?",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Yes",
+                                cancelButtonText: "No",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Perform update action here if confirmed
+                                    // Example: ajax call to server to update image
+                                    console.log("Image updated successfully!");
+                                } else {
+                                    // Handle if not confirmed
+                                    console.log("Image update canceled.");
+                                    $imageContainer.empty().html(currentContent); // Restore original content
+                                    $('#media').val(''); // Clear the file input field
+                                }
+                            });
+                        } else {
+                            console.error('.update-image-sections-show-new element not found.');
+                        }
+                    } else if (file.type.startsWith('video/')) {
+                        // Video file
+                        var $videoContainer = $('.update-video-sections-show');
+                        if ($videoContainer.length) {
+                            var currentContent = $videoContainer.html(); // Store current content
+                            $videoContainer.empty();
+                            // Create the video element
+                            var video = $('<video>').attr({
+                                'src': URL.createObjectURL(file), // Use createObjectURL to set the source
+                                'type': file.type,
+                                'width': '300px',
+                                'height': '250px',
+                                'controls': true // Add controls attribute
+                            });
+                            $videoContainer.append(video);
+                            Swal.fire({
+                                title: "Do you want to update the selected video?",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Yes",
+                                cancelButtonText: "No",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Perform update action here if confirmed
+                                    // Example: ajax call to server to update video
+                                    console.log("Video updated successfully!");
+                                } else {
+                                    // Handle if not confirmed
+                                    console.log("Video update canceled.");
+                                    $videoContainer.empty().html(currentContent); // Restore original content
+                                    $('#media').val(''); // Clear the file input field
+                                }
+                            });
+                        } else {
+                            console.error('.update-video-sections-show-new element not found.');
+                        }
+                    } else {
+                        console.error('Unsupported file type');
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                console.error('No file selected');
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- --------------------------------- image display ---------------------------------------------------------- -->
+<!-- <script>
+$(document).ready(function() {
+    $('#media').on('change', function(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var $imageContainer = $('.update-image-sections-show-new');
+            var $videoContainer = $('.update-video-sections-show-new');
+            
+            // Clear any existing content
+            $imageContainer.empty();
+            $videoContainer.empty();
+
+            // Check if the uploaded file is an image
+            if (file.type.startsWith('image/')) {
+                // Create and append image element
+                var img = $('<img>').attr('src', e.target.result).width('150px');
+                $imageContainer.append(img);
+            }
+            // Check if the uploaded file is a video
+            else if (file.type.startsWith('video/')) {
+                // Create video element
+                var video = $('<video>').attr('width', '150px').attr('controls');
+                var source = $('<source>').attr('src', e.target.result).attr('type', file.type);
+                
+                // Append source to video
+                video.append(source);
+                
+                // Append video to container
+                $videoContainer.append(video);
+            } else {
+                console.error('Unsupported file type.');
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+});
+    </script> -->
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

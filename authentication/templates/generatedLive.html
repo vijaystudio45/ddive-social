@@ -1,0 +1,663 @@
+{% extends "base.html" %} {% load static %} {% block content %} {% block css %}
+{% endblock %}
+<!-- Your custom CSS -->
+<style>
+  /* Style the table headers */
+  @media only screen and (min-width: 320px) and (max-width: 767px) {
+
+    .show-input-sections_ {
+    padding: 16px !important;
+}
+.livegendiv {
+    padding: 15px !important;
+}
+td {
+    font-size: 14px !important;
+}
+  }
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+  }
+  .container {
+    max-width: 1536px;
+    margin: 0 auto;
+}
+
+  /* Style the table rows */
+  td {
+    padding: 10px;
+  }
+
+  /* Style the alternate table rows */
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  .newsdlfjlsdfjdsjf {
+    width: 100%;
+    /* height: 100vh; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 20px 0;
+}
+td {
+    width: 20%;
+}
+div#example_filter input {
+    margin-left: 10px;
+    border: 1px solid #ddd;
+}
+/* video.video-list-view-page {
+    width: 154px;
+    height: 91px;
+} */
+table#example {
+    margin-top: 20px;
+    display: inline-block;
+}
+div#example_wrapper select {
+    margin: 0 10px;
+    width: 80px !important;
+    border: 1px solid #ddd;
+}
+</style>
+<div style="background: #dbe0e2">
+  <div class="container">
+    <div class="newsdlfjlsdfjdsjf">
+        <div class="" style="
+        width: 100%;
+    ">
+        <div class="card mb-3">
+          <div class="row g-0 main-card-sections">
+            <div class="col-md-12">
+              <div class="show-input-sections_">
+                <div class="create-post-heading-list">
+                  <p>Live Post</p>
+                </div>
+                <div class="w-full max-w-full">
+                  <div
+                    class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-soft-xl livegendiv"
+                    style="
+                            padding: 29px;
+                            overflow: overlay;
+                        "
+                  >
+                    <div class="table-responsive">
+                      <table id="example" class="display" style="width: 100%">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Post Date</th>
+                            <th>Media</th>
+                            <th>Channels</th>
+                            <th>Social Media</i></th>
+                            <th>Actions</th>
+                           
+                          </tr>
+                        </thead>
+                        <tbody>
+                       
+                          {% for i in item %}
+                          <tr data-post-id="{{ i.pk }}">
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.post_date }}</td>
+                            <td>
+                              <div class="mb-1">
+                            
+                                {% if i.generated_image %}
+                                    <img class="image-list-view-page" src="{{ i.generated_image }}" alt="{{ i.title }}">
+                                {% elif i.image %}
+                                    <img class="image-list-view-page" src="{{ i.image.url }}" alt="{{ i.title }}">
+                                {% elif i.fb_video %}
+                                    <video class="video_generated_live_page_design" controls style="width: 150px; height: 100px;">
+                                        <source src="{{ i.fb_video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>    
+                                
+                                    
+                                {% else %}
+                                    <!-- Display nothing if there's no image -->
+                                {% endif %}
+                            </div>
+                            </td>
+
+
+                            <td>
+                              <div class="div33">
+                                {% if 'LinkedIn' in i.channel %}
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                  style="width: 22px;">
+                                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                  <g id="SVGRepo_iconCarrier">
+                                    <path
+                                      d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z"
+                                      fill="#374151"></path>
+                                    <path
+                                      d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z"
+                                      fill="#374151"></path>
+                                    <path
+                                      d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z"
+                                      fill="#374151"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                      fill="#374151"></path>
+                                  </g>
+                                </svg>
+                                {% endif %}
+
+                                {% if 'Facebook' in i.channel %}
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                  style="width: 22px">
+                                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                  <g id="SVGRepo_iconCarrier">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                      fill="#374151"></path>
+                                  </g>
+                                </svg>
+                                {% endif %}
+
+                                {% if 'Instagram' in i.channel %}
+                                <svg fill="#374151" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 30px;margin-left: -3px;">
+                                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                  <g id="SVGRepo_iconCarrier">
+                                    <path
+                                      d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z">
+                                    </path>
+                                    <path
+                                      d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z">
+                                    </path>
+                                  </g>
+                                </svg>
+                                {% endif %}
+                              </div>
+                            </td>
+                          <td>
+                            <div class="div33">
+                              {% if 'LinkedIn' in i.channel %}
+                              <div class="LinkedIn-show-content-live">
+                              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 22px;">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                  <path
+                                    d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z"
+                                    fill="#374151"></path>
+                                  <path
+                                    d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z"
+                                    fill="#374151"></path>
+                                  <path
+                                    d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z"
+                                    fill="#374151"></path>
+                                  <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                    fill="#374151"></path>
+                                </g>
+                              </svg>
+                              <div class="show-like-commnet-sections">
+                                <div class="show-like-commnet-sections-child">
+                                 <i class="fa fa-thumbs-up" style="padding: 2px;font-size: 12px;"></i>
+                                 <p class="like-view-counts-linkedin">0</p>
+                                </div>
+                                <div class="show-like-commnet-sections-child">
+                                  <i class="fa fa-comment-o" style="padding: 2px;font-size: 12px;"></i>
+                                  <p class="like-view-counts-linkedin">0</p>
+                                </div>
+                               
+                            <div  class="show-like-commnet-sections-child">
+                              <i class="fa fa-share-alt" style="padding: 2px;font-size: 12px;"></i>
+                              <p class="like-view-counts-linkedin">0</p>
+                            </div>
+                             <!-- <div class="show-like-commnet-sections-child">
+                              <i class="fa fa-eye" style="padding: 2px; "></i>
+                              <p class="like-view-counts">
+                                0
+                              </p>
+                            </div> -->
+                            </div>
+                            </div>
+                              {% endif %}
+                              
+
+                              {% if 'Facebook' in i.channel %}
+                              <div class="LinkedIn-show-content-live">
+                              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 22px">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                  <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                    fill="#374151"></path>
+                                </g>
+                              </svg>
+                              <div class="show-like-commnet-sections">
+                                <div class="show-like-commnet-sections-child">
+                                 <i class="fa fa-thumbs-up" style="padding: 2px;font-size: 12px;"></i>
+                                 <p class="like-view-counts">0</p>
+                                </div>
+                                <div class="show-like-commnet-sections-child">
+                                  <i class="fa fa-comment-o" style="padding: 2px;font-size: 12px;"></i>
+                                  <p class="like-view-counts">0</p>
+                                </div>
+                               
+                            <div  class="show-like-commnet-sections-child">
+                              <i class="fa fa-share-alt" style="padding: 2px;font-size: 12px;"></i>
+                              <p class="like-view-counts">0</p>
+                            </div>
+                             <!-- <div class="show-like-commnet-sections-child">
+                              <i class="fa fa-eye" style="padding: 2px; "></i>
+                              <p class="like-view-counts">
+                                0
+                              </p>
+                            </div> -->
+                            </div>
+                              </div>
+                              {% endif %}
+
+                              {% if 'Instagram' in i.channel %}
+                              <div class="LinkedIn-show-content-live">
+                              <svg fill="#374151" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                              style="width: 30px;margin-left: -3px;">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                  <path
+                                    d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z">
+                                  </path>
+                                  <path
+                                    d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z">
+                                  </path>
+                                </g>
+                              </svg>
+                              <div class="show-like-commnet-sections">
+                                <div class="show-like-commnet-sections-child">
+                                 <i class="fa fa-thumbs-up" style="padding: 2px;font-size: 12px;"></i>
+                                 <p class="like-view-counts-insta">0</p>
+                                </div>
+                                <div class="show-like-commnet-sections-child">
+                                  <i class="fa fa-comment-o" style="padding: 2px;font-size: 12px;"></i>
+                                  <p class="like-view-counts-insta">0</p>
+                                </div>
+                              
+                            <div  class="show-like-commnet-sections-child">
+                              <i class="fa fa-share-alt" style="padding: 2px;font-size: 12px;"></i>
+                              <p class="like-view-counts-insta">0</p>
+                            </div>
+                              <!-- <div class="show-like-commnet-sections-child">
+                              <i class="fa fa-eye" style="padding: 2px; "></i>
+                              <p class="like-view-counts">
+                                0
+                              </p>
+                            </div> -->
+                            </div>
+                              </div>
+                              {% endif %}
+                            </div>
+                          </td>
+
+
+
+
+                         <td>
+                              <!-- <a class="mr-2" href="{% url 'update-generated-post' i.pk %}">Edit</a>
+                              <a class="mr-2" href="{% url 'post-delete' i.pk %}">Delete</a> -->
+                              <a  href="{% url 'post-view' i.pk %}"><i class="fa fa-eye"></i></a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                        <!-- <tfoot>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Post Date</th>
+                                        <th>Image</th>
+                                        <th>Option</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </tfoot> -->
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<!-- Initialize DataTables -->
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+  
+
+//   $(document).ready(function() {
+//     // Fetch data for each post and update like and comment counts
+//     $("tr").each(function() {
+//         var postId = $(this).data("post-id");
+//         var row = $(this); // Reference to the current row
+
+//         $.ajax({
+//             url: "https://ddivesocial.com/get-facebook-like/" + postId,
+//             method: "GET",
+//             success: function(data) {
+//                 // Check if the API response contains likes_count and comments_count
+//                 if ('likes_count' in data && 'comments_count' in data) {
+//                     // Update like count
+//                     row.find(".like-view-counts").eq(0).text(data.likes_count);
+//                     // Update comment count
+//                     row.find(".like-view-counts").eq(1).text(data.comments_count);
+//                 } else {
+//                     // If API response doesn't contain counts, display 0 for both like and comment counts
+//                     row.find(".like-view-counts").eq(0).text(0);
+//                     row.find(".like-view-counts").eq(1).text(0);
+//                 }
+//             },
+//             error: function(xhr, status, error) {
+//                 console.error(error); // Handle error if necessary
+//                 // If there's an error fetching data, display 0 for both like and comment counts
+//                 row.find(".like-view-counts").eq(0).text(0);
+//                 row.find(".like-view-counts").eq(1).text(0);
+//             }
+//         });
+//     });
+// });
+
+$(document).ready(function() {
+    // Function to fetch data and update like and comment counts
+    var table = $("#example").DataTable();
+    
+    // Function to fetch data and update like and comment counts
+    table.on('draw.dt', function () {
+        // Call updateCounts function when the table is redrawn
+        updateCounts();
+    });
+    
+    function updateCounts() {
+        $("tr").each(function() {
+            var postId = $(this).data("post-id");
+            var row = $(this); // Reference to the current row
+             console.log("postId-----------------------------",postId)
+
+
+             // Fetch facebook metrics
+            $.ajax({
+                url: "https://ddivesocial.com/get-facebook-like/" + postId,
+                method: "GET",
+                success: function(data) {
+                  console.log("data---------------------",data)
+                    // Check if the API response contains likes_count and comments_count
+                    if ('likes_count' in data && 'comments_count' in data) {
+                        // Update like count
+                        // row.find(".like-view-counts").eq(0).text(data.likes_count);
+                        // row.find(".like-view-counts").eq(1).text(data.comments_count);
+                        // row.find(".like-view-counts").eq(2).text(data.share_count);
+
+                        row.find(".like-view-counts").eq(0).text(data.likes_count || 0);
+                        // Update comment count
+                        row.find(".like-view-counts").eq(1).text(data.comments_count || 0);
+                        // Update share count
+                        row.find(".like-view-counts").eq(2).text(data.share_count || 0);
+
+                        
+                    } else {
+                        // If API response doesn't contain counts, display 0 for both like and comment counts
+                        row.find(".like-view-counts").eq(0).text(0);
+                        row.find(".like-view-counts").eq(1).text(0);
+                        row.find(".like-view-counts").eq(2).text(0);
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error); // Handle error if necessary
+                    // If there's an error fetching data, display 0 for both like and comment counts
+                    row.find(".like-view-counts").eq(0).text(0);
+                    row.find(".like-view-counts").eq(1).text(0);
+                    row.find(".like-view-counts").eq(2).text(0);
+                }
+            });
+
+         // Fetch Instagram metrics
+
+      // Fetch Instagram metrics
+      $.ajax({
+                url: "https://ddivesocial.com/get-instagram-image-metrics/" + postId,
+                method: "GET",
+                success: function(data) {
+                    console.log("Instagram Id -----",postId,"------------", data);
+                    if ('likes' in data && 'comments' in data && 'shares' in data) {
+                          // Update like count
+                          row.find(".like-view-counts-insta").eq(0).text(Number.isInteger(data.likes) ? data.likes : 0);
+                        // Update comment count
+                        row.find(".like-view-counts-insta").eq(1).text(Number.isInteger(data.comments) ? data.comments : 0);
+                        // Update share count
+                        row.find(".like-view-counts-insta").eq(2).text(Number.isInteger(data.shares) ? data.shares : 0);
+
+                        // Update like count
+                        // row.find(".like-view-counts-insta").eq(0).text(data.likes);
+                        // Update comment count
+                        // row.find(".like-view-counts-insta").eq(1).text(data.comments);
+                        // Update share count
+                        // row.find(".like-view-counts-insta").eq(2).text(data.shares);
+                    } else {
+                        // If API response doesn't contain counts, display 0 for all metrics
+                        row.find(".like-view-counts-insta").eq(0).text(0);
+                        row.find(".like-view-counts-insta").eq(1).text(0);
+                        row.find(".like-view-counts-insta").eq(2).text(0);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error); // Handle error if necessary
+                    // If there's an error fetching data, display 0 for all metrics
+                    row.find(".like-view-counts-insta").eq(0).text(0);
+                    row.find(".like-view-counts-insta").eq(1).text(0);
+                    row.find(".like-view-counts-insta").eq(2).text(0);
+                }
+            });
+
+
+            // Fetch LinkedIn metrics
+      $.ajax({
+                url: "https://ddivesocial.com/linkedin-data/" + postId,
+                method: "GET",
+                success: function(data) {
+                    console.log("Instagram Id -----",postId,"------------", data);
+                    if ('likes' in data && 'comments' in data && 'shares' in data) {
+                          // Update like count
+                          row.find(".like-view-counts-linkedin").eq(0).text(Number.isInteger(data.likes) ? data.likes : 0);
+                        // Update comment count
+                        row.find(".like-view-counts-linkedin").eq(1).text(Number.isInteger(data.comments) ? data.comments : 0);
+                        // Update share count
+                        row.find(".like-view-counts-linkedin").eq(2).text(Number.isInteger(data.shares) ? data.shares : 0);
+
+                        // Update like count
+                        // row.find(".like-view-counts-insta").eq(0).text(data.likes);
+                        // Update comment count
+                        // row.find(".like-view-counts-insta").eq(1).text(data.comments);
+                        // Update share count
+                        // row.find(".like-view-counts-insta").eq(2).text(data.shares);
+                    } else {
+                        // If API response doesn't contain counts, display 0 for all metrics
+                        row.find(".like-view-counts-linkedin").eq(0).text(0);
+                        row.find(".like-view-counts-linkedin").eq(1).text(0);
+                        row.find(".like-view-counts-linkedin").eq(2).text(0);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error); // Handle error if necessary
+                    // If there's an error fetching data, display 0 for all metrics
+                    row.find(".like-view-counts-linkedin").eq(0).text(0);
+                    row.find(".like-view-counts-linkedin").eq(1).text(0);
+                    row.find(".like-view-counts-linkedin").eq(2).text(0);
+                }
+            });
+
+        });
+    }
+
+    // Call the updateCounts function initially
+    updateCounts();
+
+    // Set interval to update like and comment counts every 5 minutes
+    setInterval(updateCounts, 5 * 60 * 1000); // 5 minutes * 60 seconds * 1000 milliseconds
+});
+
+
+// $(document).ready(function() {
+//     var table = $("#example").DataTable();
+    
+//     // Function to fetch data and update like and comment counts
+//     table.on('draw.dt', function () {
+//         // Call updateCounts function when the table is redrawn
+//         updateCounts();
+//     });
+    
+//     function updateCounts() {
+//         $("tr").each(function() {
+//             var postId = $(this).data("post-id");
+//             var row = $(this); // Reference to the current row
+//             console.log("postId-----------------------------", postId);
+            
+//             // Fetch Facebook metrics
+//             $.ajax({
+//                 url: "https://ddivesocial.com/get-facebook-like/" + postId,
+//                 method: "GET",
+//                 success: function(data) {
+//                     console.log("Facebook data---------------------", data);
+//                     if ('likes_count' in data && 'comments_count' in data) {
+//                         // Update like count
+//                         row.find(".like-view-counts").eq(0).text(data.likes_count);
+//                         // Update comment count
+//                         row.find(".like-view-counts").eq(1).text(data.comments_count);
+//                         row.find(".like-view-counts").eq(2).text(data.share_count);
+//                     } else {
+//                         // If API response doesn't contain counts, display 0 for both like and comment counts
+//                         row.find(".like-view-counts").text(0);
+//                     }
+//                 },
+//                 error: function(xhr, status, error) {
+//                     console.error(error);
+//                     // If there's an error fetching data, display 0 for both like and comment counts
+//                     row.find(".like-view-counts").text(0);
+//                 }
+//             });
+
+//             // Fetch Instagram metrics
+//             $.ajax({
+//                 url: "https://ddivesocial.com/get-instagram-metrics/" + postId,
+//                 method: "GET",
+//                 success: function(data) {
+//                     console.log("Instagram data-------------------", data);
+//                     if ('likes_count' in data && 'comments_count' in data && 'share_count' in data) {
+//                         // Update like count
+//                         row.find(".like-view-counts-insta").eq(0).text(data.likes_count);
+//                         // Update comment count
+//                         row.find(".like-view-counts-insta").eq(1).text(data.comments_count);
+//                         row.find(".like-view-counts-insta").eq(2).text(data.share_count);
+//                     } else {
+//                         // If API response doesn't contain counts, display 0 for both like and comment counts
+//                         row.find(".like-view-counts-insta").text(0);
+//                     }
+//                 },
+//                 error: function(xhr, status, error) {
+//                     console.error(error);
+//                     // If there's an error fetching data, display 0 for both like and comment counts
+//                     row.find(".like-view-counts-insta").text(0);
+//                 }
+//             });
+//         });
+//     }
+
+//     // Call the updateCounts function initially
+//     updateCounts();
+
+//     // Set interval to update like and comment counts every 5 minutes
+//     setInterval(updateCounts, 5 * 60 * 1000); // 5 minutes * 60 seconds * 1000 milliseconds
+// });
+
+
+
+
+
+
+
+// $(document).ready(function() {
+//     var table = $("#example").DataTable();
+    
+//     // Function to fetch data and update like and comment counts
+//     table.on('draw.dt', function () {
+//         // Call updateCounts function when the table is redrawn
+//         updateCounts();
+//     });
+    
+//     function updateCounts() {
+//         $("tr").each(function() {
+//             var postId = $(this).data("post-id");
+//             var row = $(this); // Reference to the current row
+            
+//             // Fetch Instagram metrics
+//             $.ajax({
+//                 url: "https://ddivesocial.com/get-instagram-image-metrics/" + postId,
+//                 method: "GET",
+//                 success: function(data) {
+//                     console.log("Instagram Id -----",postId,"------------", data);
+//                     if ('likes' in data && 'comments' in data && 'shares' in data) {
+//                           // Update like count
+//                           row.find(".like-view-counts-insta").eq(0).text(Number.isInteger(data.likes) ? data.likes : 0);
+//                         // Update comment count
+//                         row.find(".like-view-counts-insta").eq(1).text(Number.isInteger(data.comments) ? data.comments : 0);
+//                         // Update share count
+//                         row.find(".like-view-counts-insta").eq(2).text(Number.isInteger(data.shares) ? data.shares : 0);
+
+//                         // Update like count
+//                         // row.find(".like-view-counts-insta").eq(0).text(data.likes);
+//                         // Update comment count
+//                         // row.find(".like-view-counts-insta").eq(1).text(data.comments);
+//                         // Update share count
+//                         // row.find(".like-view-counts-insta").eq(2).text(data.shares);
+//                     } else {
+//                         // If API response doesn't contain counts, display 0 for all metrics
+//                         row.find(".like-view-counts-insta").eq(0).text(0);
+//                         row.find(".like-view-counts-insta").eq(1).text(0);
+//                         row.find(".like-view-counts-insta").eq(2).text(0);
+//                     }
+//                 },
+//                 error: function(xhr, status, error) {
+//                     console.error(error); // Handle error if necessary
+//                     // If there's an error fetching data, display 0 for all metrics
+//                     row.find(".like-view-counts-insta").eq(0).text(0);
+//                     row.find(".like-view-counts-insta").eq(1).text(0);
+//                     row.find(".like-view-counts-insta").eq(2).text(0);
+//                 }
+//             });
+//         });
+//     }
+
+//     // Call the updateCounts function initially
+//     updateCounts();
+
+//     // Set interval to update like and comment counts every 5 minutes
+//     setInterval(updateCounts, 5 * 60 * 1000); // 5 minutes * 60 seconds * 1000 milliseconds
+// });
+
+
+
+</script>
+
+{% endblock %}

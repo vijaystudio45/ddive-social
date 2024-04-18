@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="main-section-post-post">
+    <div class="card mb-3">
+        <div class="main-card-sections">
+            <div>
+                <div class="show-input-sections-generate-post-section">
+                    <div class="create-post-heading">
+                        <p class="create-header">Generate Post</p>
+                    </div>
+                    <form id="postForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <div>
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1" style="margin-bottom: 10px;">Name :</label>
+                                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="name" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp" placeholder="Enter Title" required />
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="post_date">Post Date and Time :</label>
+                                    <input type="datetime-local" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="post_date" id="post_date" aria-describedby="postDateHelp" placeholder="Enter Post Date and Time" required />
+                                    <!-- <p class="text-gray-600 text-xs italic" id="postDateHelp">Please enter the post date and time.</p> -->
+                                </div>
+                                <!-- <div class="mb-10">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1">Post Date and Time</label>
+                                    <input type="datetime-local" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="post_date"
+                                           value="{{ item.post_date|date:'Y-m-dTH:i' }}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Post Date and Time" />
+                                </div> -->
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleFormControlTextarea1"
+                                        style="margin-bottom: 10px;">Topic :</label>
+                                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" id="exampleFormControlTextarea1"
+                                        rows="5" placeholder="Enter the topic the post you want to be generated."></textarea>
+                                </div>
+
+
+
+                            <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleFormControlTextarea1" style="margin-bottom: 10px;">Channels :</label>
+                        
+                            <select id="option" name="option" class="options-select-section-div" multiple size="3">
+                                <option value="LinkedIn" {% if 'LinkedIn' in item.option %} selected {% endif %}>LinkedIn</option>
+                                <option value="Instagram" {% if 'Instagram' in item.option %} selected {% endif %}>Instagram</option>
+                                <option value="Facebook" {% if 'Facebook' in item.option %} selected {% endif %}>Facebook</option>
+                            </select>
+                        </div>
+
+
+                        <div id="facebookDiv" class="mb-4">
+                            <div class="mb-10">
+                                <label class="block text-gray-700 text-sm font-bold mb-2 section-marging-2" for="page_id">Select Page Facebook:</label>
+                                <select id="page_id" name="page_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">Select Anyone</option>
+                                    {% if accounts %}
+                                    {% for account in accounts %}
+                                        <option value="{{ account.id }},{{ account.name }}" >{{ account.name }}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                    <option value="">No Facebook pages found. Please authenticate your account to access your pages.</option>
+                                    {% endif %}
+                                </select>
+                            </div>                        
+                        </div>
+                        <div id="linkedinDiv" class="mb-4">
+                            <div class="mb-10">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="linkedin_page_id" style="margin-bottom: 10px;">Select Page LinkedIn:</label>
+                                <select id="linkedin_page_id" name="linkedin_page_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">Select Anyone</option>
+                                    {% if linkedin_pages %}
+                                    {% for page in linkedin_pages %}
+                                        <option value="{{ page.id }},{{ page.name }}">{{ page.name }}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="">No LinkedIn pages found. Please authenticate your account to access your pages.</option>
+                                    {% endif %}
+                                        
+                                    <!-- {% for page in linkedin_pages %}
+                                        <option value="{{ page.id }},{{ page.name }}">{{ page.name }}</option>
+                                    {% endfor %} -->
+                                </select>
+                            </div>
+                        </div>
+                        <div id="InstagramDiv" class="mb-4">
+                            <div class="mb-10">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="instagram_page_id" style="margin-bottom: 10px;">Select Page Instagram:</label>
+                                <select id="instagram_page_id" name="instagram_page_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">Select Anyone</option>
+                                    {% if instagram_accounts %}
+                                    {% for instagram in instagram_accounts %}
+                                        <option value="{{ instagram.id }},{{ instagram.name }}">{{ instagram.name }}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                    <option value="">No instagram pages found. Please authenticate your account to access your pages.</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        </div>
+                                </div>
+                               
+                                <div class="mb-4">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2 " for="image_needed" style="margin-bottom: 10px;">Associated Image Needed? :</label>
+                                        <input type="checkbox" id="image_needed" name="image_needed" value="True">
+                                    </div>
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1" style="margin-bottom: 10px;">Brief Image Prompt(if associated image is required) :</label>
+                                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="image_prompt" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp" placeholder="Enter Image Prompt" />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="media">Media :</label>
+                                    <input class="shadow appearance-none border rounded w-full bg-white py-2 px-3 mb-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="file" id="media" name="fb_media" accept="image/*,video/*">
+                                    <div class="update-video-sections-show"></div>
+                                </div>
+                              
+                            </div>
+                          
+                            <!-- <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="video">Media :</label>
+                                <input class="shadow appearance-none border rounded w-full bg-white py-2 px-3 mb-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="file" id="video" name="fb_video">
+                                <div class="update-video-sections-show">
+                                </div>
+                               
+                            </div> -->
+                        </div>
+                        <button type="submit" class="btnsection-for-submit Submitclassdiv">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="preloder_loader_spinner" style="display: none;">
+    <div class="loder_loader_spinner">
+      
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+    $(document).ready(function () {
+    // Hide all divs initially
+    $('#facebookDiv').hide();
+    $('#linkedinDiv').hide();
+    $('#InstagramDiv').hide();
+
+    $('#option').change(function () {
+        var selectedValues = $(this).val();
+        if (selectedValues.includes('Facebook') && selectedValues.includes('LinkedIn') && selectedValues.includes('Instagram')) {
+            $('#facebookDiv').show();
+            $('#linkedinDiv').show();
+            $('#InstagramDiv').show();
+        } else if (selectedValues.includes('Facebook') && selectedValues.includes('LinkedIn')) {
+            $('#facebookDiv').show();
+            $('#linkedinDiv').show();
+            $('#InstagramDiv').hide();
+        } else if (selectedValues.includes('Facebook') && selectedValues.includes('Instagram')) {
+            $('#facebookDiv').show();
+            $('#linkedinDiv').hide();
+            $('#InstagramDiv').show();
+        } else if (selectedValues.includes('LinkedIn') && selectedValues.includes('Instagram')) {
+            $('#facebookDiv').hide();
+            $('#linkedinDiv').show();
+            $('#InstagramDiv').show();
+        } else if (selectedValues.includes('Facebook')) {
+            $('#facebookDiv').show();
+            $('#linkedinDiv').hide();
+            $('#InstagramDiv').hide();
+        } else if (selectedValues.includes('LinkedIn')) {
+            $('#facebookDiv').hide();
+            $('#linkedinDiv').show();
+            $('#InstagramDiv').hide();
+        } else if (selectedValues.includes('Instagram')) {
+            $('#facebookDiv').hide();
+            $('#linkedinDiv').hide();
+            $('#InstagramDiv').show();
+        } else {
+            $('#facebookDiv').hide();
+            $('#linkedinDiv').hide();
+            $('#InstagramDiv').hide();
+        }
+    });
+});
+
+    $(document).ready(function () {
+        $('#postForm').submit(function (event) {
+            $('.preloder_loader_spinner').show();
+        });
+    });
+
+   
+    $(document).ready(function () {
+        $('#video').on('change', function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                $('.loader').show(); // Show loader while processing the file
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.loader').hide(); // Hide loader after file is loaded
+                    if (file.type.startsWith('image/')) {
+                        // Image file
+                        var img = $('<img>').attr('src', e.target.result).width('150px').height('150px');
+                        var $imageContainer = $('.update-video-sections-show');
+                        if ($imageContainer.length) {
+                            var currentContent = $imageContainer.html(); // Store current content
+                            $imageContainer.empty().append(img);
+                          
+                        } else {
+                            console.error('.update-image-sections-show-new element not found.');
+                        }
+                    } else if (file.type.startsWith('video/')) {
+                        // Video file
+                        var $videoContainer = $('.update-video-sections-show');
+                        if ($videoContainer.length) {
+                            var currentContent = $videoContainer.html(); // Store current content
+                            $videoContainer.empty();
+                            // Create the video element
+                            var video = $('<video>').attr({
+                                'src': URL.createObjectURL(file), // Use createObjectURL to set the source
+                                'type': file.type,
+                                'width': '150px',
+                                'height': '150px',
+                                'controls': true // Add controls attribute
+                            });
+                            $videoContainer.append(video);
+                        } else {
+                            console.error('.update-video-sections-show-new element not found.');
+                        }
+                    } else {
+                        console.error('Unsupported file type');
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                console.error('No file selected');
+            }
+        });
+    });
+
+
+</script>
+{% endblock %}
