@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.models import User
-from authentication.models import CustomUser as User
+from authentication.models import CustomUser as User,Prompt
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -32,7 +32,6 @@ import requests
 from .helper import *
 import json
 from django.db.models import Q
-from django.core.files.uploadedfile import InMemoryUploadedFile
 # Create your views here.
 
 
@@ -257,6 +256,18 @@ def create_post(request):
             
 
 
+# url = f"https://graph.facebook.com/v19.0/me/accounts"
+#     params = {
+#         'fields': 'id,name,access_token,instagram_business_account',
+#         'access_token': access_token
+#     }
+
+#     response = requests.get(url, params=params)
+#     response.raise_for_status()  
+#     data = response.json()
+#     print("3333333333333333333333333",data)
+
+
 
 def GenerateAIPost(request):
 
@@ -324,9 +335,21 @@ def GenerateAIPost(request):
         name = request.POST.get('name')
         post_date = request.POST.get('post_date')
         image = request.FILES.get('image')
+        print(image,'==========imageimageimage')
         channel = request.POST.getlist('option')
+        print(channel,'channelchannel')
         description = request.POST.get('description')
         page_id = request.POST.get('page_id')
+        # prompts = request.POST.get('prompts')
+        selected_prompts = request.POST.getlist('prompts')
+        selected_promptid = request.POST.get('promptId')
+        # selected_prompts=[]
+        # for prompt in prompts:
+        #     selected_prompts.append(prompt)
+        print(selected_promptid,'==================================================selected_promptid')
+        print(selected_prompts,'-=-=-=-=-=selected_prompts')
+        categoriesdata = request.POST.get('categoriesdata')
+        print(request.POST,'posststttttttt')
         account_name = ""
         if page_id:
             page_id, account_name = page_id.split(',')
@@ -382,13 +405,43 @@ def GenerateAIPost(request):
             Instagram_page_name=Instagram_page_name,
             image_needed=image_needed,image_needed_prompt=image_prompt)
         new_post.save()
+
+        prompt_text = None
+
+        if selected_promptid:
+            prompt_text = Prompt.objects.get(id=selected_promptid).category.text
+            print(prompt_text,'----------------------------------------------')
+        # print(1+'1')
+        selected_prompts_str = ' '.join(selected_prompts)
+
+        if description is None:
+            description = selected_prompts_str
+            print(description,'][][]description')
+        elif selected_prompts:
+            description = selected_prompts_str + "" + description
+            print(description,'========description')
+
+        # print(1+'1')
+
+        # print()
         
         for i in channel:
             if i == 'Facebook':
                 user = request.user
                 if user.company:
-                    company_description = user.company.description
-                data1 = generate_facebook_post(description,company_description, i)
+                    # selected_prompt = selected_prompts
+                    # print(selected_prompt)
+                    categoriesdata = categoriesdata
+                    print(categoriesdata)
+                    # additional_description= description
+                    social_media_section = user.company.user_company_social.first()
+
+                    company_description = social_media_section.description
+                    print(company_description,'company_description')
+                    # if selected_prompt:
+                    #     description=selected_prompt
+                data1 = generate_facebook_post(description,company_description,categoriesdata,prompt_text, i)
+                print(data1,'ppppppppppppppppppppp')
                 fb_token = UserAccessToken.objects.filter(user=request.user, types='Facebook', page_id=page_id).first()
                 if fb_token:
                     # data = create_facebook_page_post(page_id,fb_token.page_access_token,description)
@@ -401,24 +454,45 @@ def GenerateAIPost(request):
             if i == 'LinkedIn':
                 user = request.user
                 if user.company:
-                    company_description = user.company.description
+                    # selected_prompt = selected_prompts
+                    # print(selected_prompt)
+                    categoriesdata = categoriesdata
+                    print(categoriesdata)
+                    # additional_description= description
+                    social_media_section = user.company.user_company_social.first()
+
+                    company_description = social_media_section.description
+                    print(company_description,'company_description')
+                    # if selected_prompt:
+                    #     description=selected_prompt
                 token = UserAccessToken.objects.filter(user=request.user,types='LinkedIn').first()
-                data2 = generate_facebook_post(description,company_description, i)
+                data2 = generate_facebook_post(description,company_description,categoriesdata,prompt_text, i)
                 if token :
                     # data = create_linkedin_post(linkedin_page_id,token.token,data2)
-                    if token and (new_post.image or new_post.generated_image):
-                        if new_post.image:
-                            image = new_post.image
-                        else:
-                            image = new_post.generated_image
+                    print("ddd")
+                if token and (new_post.image or new_post.generated_image):
+                    if new_post.image:
+                        image = new_post.image
+                    else:
+                        image = new_post.generated_image
                     # linkedin_data =  create_media_linkedin_post(linkedin_page_id,token.token,data2,f'{new_post.image.url}')
 
             if i == 'Instagram':
                 user = request.user
                 if user.company:
-                    company_description = user.company.description
+                    # selected_prompt = selected_prompts
+                    # print(selected_prompt)
+                    categoriesdata = categoriesdata
+                    print(categoriesdata)
+                    # additional_description= description
+                    social_media_section = user.company.user_company_social.first()
+
+                    company_description = social_media_section.description
+                    print(company_description,'company_description')
+                    # if selected_prompt:
+                    #     description=selected_prompt
                 token = UserAccessToken.objects.filter(user=request.user,types='Instagram').first()
-                data3 = generate_facebook_post(description,company_description, i)
+                data3 = generate_facebook_post(description,company_description,categoriesdata,prompt_text, i)
        
         new_post.generated_fb_post = data1
         new_post.generated_insta_post = data3
@@ -457,7 +531,7 @@ def GeneratedLiveList(request):
 
 
 
-
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 def UpdateGeneratedItem(request, pk):
@@ -506,6 +580,33 @@ def PostView(request, pk):
 
 
 
+#to get likes and comment in fb
+
+
+
+
+
+# def get_facebook_like(request,id):
+#     post = get_object_or_404(GeneratePost, id=id)
+#     fb_token = UserAccessToken.objects.filter(user=post.user,page_id = post.page_id).first()
+#     print("rrrrrrrrrrrrrrrrrrrrrrr",fb_token)
+#     data_count = facebook_likes_comments(post.facebook_page_post_id,fb_token.page_access_token)
+#     share_count = get_shared_count(post.facebook_page_post_id,fb_token.page_access_token)
+#     if data_count is None:
+#         # Handle the case where data_count is None
+#         return JsonResponse({'error': 'Failed to fetch likes and comments data'})
+#     likes_count = data_count['likes']['summary']['total_count']
+#     comments_count = data_count['comments']['summary']['total_count']
+#     response_data = {
+#         'likes_count': likes_count,
+#         'comments_count': comments_count,
+#         'share_count':share_count
+#     }
+    
+#     return JsonResponse(response_data, safe=False)
+
+
+
 
 
 def get_facebook_like(request, id):
@@ -541,7 +642,7 @@ def get_facebook_like(request, id):
 
 
 
-####-----------------------post_list--------------__####################
+####-----------------------__SHIVAM--------------__####################
 
 
 from django.http import JsonResponse
@@ -593,6 +694,9 @@ def get_linkedin_pages(access_token):
             page_info.append({'name': page_name, 'id': page_id})
 
         return page_info
+        # Extract page information
+        # pages = data.get('elements', [])
+        # return pages
     else:
         # Handle error cases, such as LinkedIn API being down or access token issues
         return None
@@ -691,15 +795,95 @@ def GenerateAILinkedInPost(request):
 
 
 
+
+
+
+# def get_page_engagement(token, page_id):
+#     page_id = 77015671
+#     headers = {
+#         'Authorization': 'Bearer ' + token,
+#         'Connection': 'Keep-Alive',
+#     }
+#     url = f'https://api.linkedin.com/v2/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:{page_id}'
+#     response = requests.get(url, headers=headers)
+#     if response.status_code == 200:
+#         data = response.json()
+#         print(data,'qaqaqaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+#         likes = data.get('totalShareStatistics', {}).get('likeCount', 0)
+#         comments = data.get('totalShareStatistics', {}).get('commentCount', 0)
+#         shares = data.get('totalShareStatistics', {}).get('shareCount', 0)
+#         return likes, comments, shares
+#     else:
+#         # Handle errors here
+#         print("Error fetching engagement data:", response.text)
+#         return None, None, None
+
+
+
+
+# def GenerateAILinkedInPost(request):
+#     if request.method == 'GET':
+#         access_token = UserAccessToken.objects.filter(user=request.user, types='LinkedIn').first()
+#         if access_token:
+#             token = access_token.token
+#             linkedin_pages = get_linkedin_pages(token)
+#             page_engagement_data = []
+#             for page in linkedin_pages:
+#                 page_id = page['id']
+#                 page_name = page['name']
+#                 likes, comments, shares = get_page_engagement(token, page_id)
+#                 page_engagement_data.append({
+#                     'name': page_name,
+#                     'id': page_id,
+#                     'likes': likes,
+#                     'comments': comments,
+#                     'shares': shares
+#                 })
+#             return render(request, 'generatepost.html', {'linkedin_pages': page_engagement_data})
+#         else:
+#             # Handle case where user has no LinkedIn access token
+#             return render(request, 'generatepost.html')
+
+
+
+# def GenerateAILinkedInPost(request):
+
+#     if request.method == 'GET':
+#         access_token = UserAccessToken.objects.filter(user=request.user, types='LinkedIn').first()
+#         if access_token:
+#             token = access_token.token
+#             # Get LinkedIn pages
+#             linkedin_pages = get_linkedin_pages(token)
+#             print("ttttttttttttttttttttttttttttt", linkedin_pages) 
+
+#             # Pass the LinkedIn pages data to the template for rendering
+#             return render(request, 'generatepost.html', {'linkedin_pages': linkedin_pages})
+#         else:
+#             # Handle case where user has no LinkedIn access token
+#             return render(request, 'generatepost.html')
+    
+    
+
+
+
+
 # ----------------------------------------------------End_get_linkedin_page---------------------------------------------
 
 
 #--------------------------------------instagram page/detail get---------------------------------------#
 
 def get_insta_pages(request):
+    # access_token = 'EAAZALWvsrG0oBOymaZApvrkZArCcO9M0IoIODXcpCCTMSZBeP2D3YqwU5ZCmZCETirYDhoCxfVTGpZB2AmUOx1LxMKgmqPy31ySSpAgW4liVFZAM1GjvOECNHD8dEspKkcIeQLnAnsvDe36abZCEK6APzt4lZAB1e8EiiSifAXox183H6ORtcCZBonOw0yBGKIH8mcyO44C7WGnJtxxZCjZAUOSmboO4Q4dZCbNFqKPxyWZB5I1oZC99FYmj5IXy0RhqAEJS'
     access_token = UserAccessToken.objects.filter(user=request.user,types='Facebook').first()
+    print(access_token,'----------------------access_token')
     data = get_instagram_accounts(access_token)
     print(data.text)
+
+
+
+
+
+
 
 
 
@@ -771,6 +955,7 @@ def get_instagram_metrics(request, id):
 
         api_version = 'v19.0'
         fields = 'comments_count,like_count,insights.metric(engagement,impressions,reach,saved,video_views)'
+        # fields = 'comments_count,like_count'
 
         url = f'https://graph.facebook.com/{api_version}/{media_id}?fields={fields}&access_token={access_token}'
 

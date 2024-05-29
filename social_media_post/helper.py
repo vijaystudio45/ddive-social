@@ -92,7 +92,42 @@ def create_facebook_page_post(page_id,access_token,content):
 
 
 
-#to post and image
+
+#image and description in one post
+# def create_post_image(page_id, access_token, content, image_url=None):
+#     print(image_url,'-------------------------image_url')
+#     if image_url:
+#         endpoint_url = "https://graph.facebook.com/me/photos"
+#         data = {
+#             'message': content,
+#             'url': image_url,
+#             'access_token': access_token
+#         }
+#     else:
+#         endpoint_url = 'https://graph.facebook.com/{}/feed'.format(page_id)
+#         data = {
+#             'message': content,
+#             'access_token': access_token
+#         }
+
+#     response = requests.post(endpoint_url, data=data)   
+#     return response
+
+
+#to post content
+def create_post_fb(page_id, access_token, content):
+   
+    endpoint_url = 'https://graph.facebook.com/{}/feed'.format(page_id)
+    data = {
+        'message': content,
+        'access_token': access_token
+    }
+
+    response = requests.post(endpoint_url, data=data)
+    return response
+
+
+# #to post and image
 def create_post_image(page_id, access_token, content,image):
     endpoint_url = f"https://graph.facebook.com/me/photos"
 
@@ -123,13 +158,15 @@ def generate_images(image_prompt):
         response = response.data[0].url
         return response
 
-def generate_facebook_post(description,company_description, channel):
+def generate_facebook_post(description,company_description,categoriesdata,prompt_text, channel):
 
-    prompt = f"Generate {channel} post regarding {description} according to {company_description} and write {channel} at the end in 100 words."
+    # prompt = f"Generate {channel} post regarding {description} according to {company_description}, reference keywords {categoriesdata} and write {channel} at the end in 130 words."
+    prompt = f"""Generate {channel} post of 100 words using the prompt {description} and if available, extracting relevant information from "{prompt_text}" if not available then give me relevant response.Use the {company_description} to promote in the post and create call to action in a subtle way.If you have url then show it in the post.Also use the keywords {categoriesdata} in your post."""
+    print(prompt,'----------------prompt')
     response = client.completions.create(
         model="gpt-3.5-turbo-instruct",
         prompt=prompt,
-        max_tokens=200
+        max_tokens=400
     )
     facebook_post = response.choices[0].text.strip()
     facebook_post = facebook_post.strip("()")
@@ -149,6 +186,9 @@ def facebook_likes_comments(post_id,page_access_token):
     if response.status_code == 200:
         data = response.json()
         return data
+        # likes_count = data['likes']['summary']['total_count']
+        # comments_count = data['comments']['summary']['total_count']
+        # print(f'Likes: {likes_count}, Comments: {comments_count}')
     else:
         print('Error:', response.text)
 

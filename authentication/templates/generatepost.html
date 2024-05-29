@@ -7,6 +7,64 @@
 {% block content %}
 
 
+<style>
+    /* .main-selectbox {
+        background: #174c6e;
+        color: white;
+        padding: 15px 15px;
+        border-radius: 7px;
+        cursor: pointer;
+        box-shadow: 0px 2px 8px 0px gray;
+        font-size: 12px;
+    } */
+
+    .main-selectbox.selected {
+    background: #174c6e;
+    color: white;
+}
+
+.main-selectbox {
+    border: 1px solid #174c6e;
+    color: #174c6e;
+    padding: 15px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    box-shadow: 0px 2px 8px 0px gray;
+    font-size: 12px;
+    margin-top: 10px;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+
+
+.main-selectbox.selectedcaseFiles {
+    background: #174c6e;
+    color: white;
+}
+
+
+
+.main-selectbox.selectedcategories {
+    background: #174c6e;
+    color: white;
+}
+
+
+
+
+.main-selectbox.staticPrompts {
+    background: #174c6e;
+    color: white;
+}
+
+
+
+
+
+</style>
+
+
 <div class="main-section-post-post">
     <div class="card mb-3">
         <div class="main-card-sections">
@@ -27,20 +85,75 @@
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="post_date">Post Date and Time :</label>
                                     <input type="datetime-local" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="post_date" id="post_date" aria-describedby="postDateHelp" placeholder="Enter Post Date and Time" required />
-                                    <!-- <p class="text-gray-600 text-xs italic" id="postDateHelp">Please enter the post date and time.</p> -->
+                                    
                                 </div>
-                                <!-- <div class="mb-10">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleInputEmail1">Post Date and Time</label>
-                                    <input type="datetime-local" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="post_date"
-                                           value="{{ item.post_date|date:'Y-m-dTH:i' }}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Post Date and Time" />
-                                </div> -->
+
+                                <div class="mb-10">
+                                   
+                                    <label class="block text-gray-700 text-sm font-bold mb-2"
+                                        for="exampleInputEmail1"> Select a prompt for your post</label>
+                                    <div>
+
+                                        <!-- <label class="block text-gray-700 text-sm font-bold mb-2"
+                                        for="exampleInputEmail1">Prompts</label> -->
+                                        <div id="promptsDiv"  class="grid grid-cols-2 gap-4"> 
+                                        </div>
+                                        <select hidden name='prompts' id="selectedPrompt">
+                                        <option value="">Select a prompt</option>
+                                        </select>
+
+
+                                        <select hidden name='promptId' id="selectedPromptIdshow">
+                                            <option value="">Select a prompt</option>
+                                            </select>
+                                    </div>
+                                  
+                                <div>
+                                    <!-- <label class="block text-gray-700 text-sm font-bold mb-2 mt-2"
+                                    for="exampleInputEmail1">Case Files</label> -->
+                                    <div id="caseFilesDiv"  class="grid grid-cols-2 gap-4"> 
+                                    </div>
+                                    <select hidden name='prompts' id="selectedPrompt">
+                                        <option value="">Select a prompt</option>
+                                    </select>
+                                    </div>
+
+                                <div>
+                                    <!-- <label class="block text-gray-700 text-sm font-bold mb-2 mt-2"
+                                    for="exampleInputEmail1">Static Prompts</label> -->
+                                    <div id="staticPromptsDiv"  class="grid grid-cols-2 gap-4"> 
+                                    </div>
+                                       
+                                    <select hidden name='prompts' id="selectedPrompt">
+                                        <option value="">Select a prompt</option>
+                                    </select>
+                                </div>
+                            </div>
+
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="exampleFormControlTextarea1"
-                                        style="margin-bottom: 10px;">Topic :</label>
+                                        style="margin-bottom: 10px;">Additional Details (if any) :</label>
                                     <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" id="exampleFormControlTextarea1"
                                         rows="5" placeholder="Enter the topic the post you want to be generated."></textarea>
                                 </div>
 
+
+
+                                <div class="mb-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2 mt-2"
+                                    for="exampleInputEmail1">Suggested keywords (update if you need to):</label>
+                                    <div id="categoriesDiv"  class="grid grid-cols-2 gap-4"> 
+                                    </div>
+                                    <select hidden name='prompts' id="selectedPrompt">
+                                        <option value="">Select a prompt</option>
+                                    </select>
+
+
+                                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="categoriesdata" id="categoriesInput" 
+                                    placeholder="Add Keyword" />
+
+
+                                </div>
 
 
                             <div class="mb-4">
@@ -52,7 +165,6 @@
                                 <option value="Facebook" {% if 'Facebook' in item.option %} selected {% endif %}>Facebook</option>
                             </select>
                         </div>
-
 
                         <div id="facebookDiv" class="mb-4">
                             <div class="mb-10">
@@ -150,7 +262,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ 
 <script>
     $(document).ready(function () {
     // Hide all divs initially
@@ -207,34 +320,34 @@
         $('#video').on('change', function (event) {
             var file = event.target.files[0];
             if (file) {
-                $('.loader').show(); // Show loader while processing the file
+                $('.loader').show(); 
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $('.loader').hide(); // Hide loader after file is loaded
+                    $('.loader').hide();
                     if (file.type.startsWith('image/')) {
                         // Image file
                         var img = $('<img>').attr('src', e.target.result).width('150px').height('150px');
                         var $imageContainer = $('.update-video-sections-show');
                         if ($imageContainer.length) {
-                            var currentContent = $imageContainer.html(); // Store current content
+                            var currentContent = $imageContainer.html(); 
                             $imageContainer.empty().append(img);
                           
                         } else {
                             console.error('.update-image-sections-show-new element not found.');
                         }
                     } else if (file.type.startsWith('video/')) {
-                        // Video file
+
                         var $videoContainer = $('.update-video-sections-show');
                         if ($videoContainer.length) {
-                            var currentContent = $videoContainer.html(); // Store current content
+                            var currentContent = $videoContainer.html(); 
                             $videoContainer.empty();
-                            // Create the video element
+
                             var video = $('<video>').attr({
-                                'src': URL.createObjectURL(file), // Use createObjectURL to set the source
+                                'src': URL.createObjectURL(file), 
                                 'type': file.type,
                                 'width': '150px',
                                 'height': '150px',
-                                'controls': true // Add controls attribute
+                                'controls': true 
                             });
                             $videoContainer.append(video);
                         } else {
@@ -250,6 +363,280 @@
             }
         });
     });
+
+
+// function fetchDataAgain() {
+//     $.ajax({
+//         url: `{{Backend_url}}/get_unique_prompts/`,
+//         type: "GET",
+//         dataType: "json",
+//         success: function (data) {
+//             // Mapping and displaying prompts data
+//             var promptsDiv = $('#promptsDiv');
+//             promptsDiv.empty();
+//             data.prompts.forEach(function(prompt, index) {
+//                 var div = $("<div class='main-selectbox'>").text(prompt.text);
+
+//                     div.click(function() {
+//                     $('.main-selectbox').removeClass('selected');
+//                     $(this).toggleClass('selected'); 
+                    
+//                     var selectedValue = $(this).text();
+//                     
+
+//                     $('#selectedPrompt').empty().append($('<option>', {
+//                         value: selectedValue,
+//                         text: selectedValue
+//                     }));
+//                     });
+
+//                 promptsDiv.append(div);
+//             });
+
+//             var categoriesDiv = $('#categoriesDiv');
+//             categoriesDiv.empty();
+//             data.categories.forEach(function(category, index) {
+//                 var div = $("<div class='main-selectbox'>").text(category.keywords);
+
+//                     div.click(function() {
+//                     $('.main-selectbox').removeClass('selectedcategories');
+//                     $(this).toggleClass('selectedcategories'); 
+                    
+//                     // Get the selected value and update the select box
+//                     var selectedValue = $(this).text();
+//                     
+
+//                     $('#categoriesDivPrompt').empty().append($('<option>', {
+//                         value: selectedValue,
+//                         text: selectedValue
+//                     }));
+//                     });
+
+//                 categoriesDiv.append(div);
+//             });
+
+//             // Mapping and displaying case files data
+//             var caseFilesDiv = $('#caseFilesDiv');
+//             caseFilesDiv.empty();
+//             data.case_files.forEach(function(file, index) {
+//                 var div = $("<div class='main-selectbox'>").text(file.file_name);
+
+
+//                     div.click(function() {
+//                                 $('.main-selectbox').removeClass('selectedcaseFiles');
+//                                 $(this).toggleClass('selectedcaseFiles'); 
+                                
+//                                 // Get the selected value and update the select box
+//                                 var selectedValue = $(this).text();
+//                                 
+                                
+//                                 $('#caseFilesDivPrompt').empty().append($('<option>', {
+//                                     value: selectedValue,
+//                                     text: selectedValue
+//                                 }));
+//                             });
+
+//                 caseFilesDiv.append(div);
+//             });
+
+
+//                 var staticPromptsDiv = $('#staticPromptsDiv');
+//                 staticPromptsDiv.empty();
+//                 data.static_prompts.forEach(function(staticPrompt, index) {
+//                     var personalDiv = $("<div class='main-selectbox'>").text(staticPrompt.personal_development);
+//                     staticPromptsDiv.append(personalDiv);
+
+//                     var meetingDiv = $("<div class='main-selectbox'>").text(staticPrompt.meeting_attended);
+//                     staticPromptsDiv.append(meetingDiv);
+
+//                     // Attach click event to both personalDiv and meetingDiv
+//                     personalDiv.add(meetingDiv).click(function() {
+//                         $('.main-selectbox').removeClass('staticPrompts');
+//                         $(this).toggleClass('staticPrompts');
+
+//                         var selectedValue = $(this).text();
+//                         ;
+
+//                         $('#staticPromptsSelect').append($('<option>', {
+//                             value: selectedValue,
+//                             text: selectedValue
+//                         }));
+//                     });
+//                 });
+
+
+//         },
+//         error: function (xhr, status, error) {
+//             console.error("Error fetching data:", error);
+//         },
+//     });
+// }
+
+
+
+
+
+
+function fetchDataAgain() {
+    $.ajax({
+        url: `{{Backend_url}}/get_unique_prompts/`,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            // Mapping and displaying prompts data
+            var promptsDiv = $('#promptsDiv');
+    promptsDiv.empty();
+    data.prompts.forEach(function(prompt, index) {
+        var div = $("<div class='main-selectbox'>").text(prompt.text);
+
+        div.click(function() {
+            $('.main-selectbox').removeClass('selected');
+            $(this).toggleClass('selected'); 
+            
+            var selectedValue = $(this).text();
+            var selectedId = prompt.prompt_id; // Get the prompt_id from the data
+
+
+            $('#selectedPromptIdshow').empty().append($('<option>', {
+                value: selectedId, // Use prompt_id as value
+                text: selectedValue
+            }));
+
+            $('#selectedPrompt').empty().append($('<option>', {
+                value: selectedValue, // Use prompt_id as value
+                text: selectedValue
+            }));
+        });
+
+        promptsDiv.append(div);
+    });
+            // var categoriesDiv = $('#categoriesDiv');
+            // categoriesDiv.empty();
+            // data.categories.forEach(function(category, index) {
+            //     var div = $("<div class='main-selectbox'>").text(category.keywords);
+
+            //         div.click(function() {
+            //         $('.main-selectbox').removeClass('selected');
+            //         $(this).toggleClass('selected'); 
+                    
+            //         // Get the selected value and update the select box
+            //         var selectedValue = $(this).text();
+                    
+
+            //         $('#selectedPrompt').empty().append($('<option>', {
+            //             value: selectedValue,
+            //             text: selectedValue
+            //         }));
+            //         });
+
+            //     categoriesDiv.append(div);
+            // });
+
+                        var categoriesDiv = $('#categoriesDiv');
+            var inputBox = $('#categoriesInput'); 
+            categoriesDiv.empty();
+
+            var categoryKeywords = data.categories.map(function(category) {
+                return category.keywords;
+            });
+
+            var allKeywords = categoryKeywords.join(', '); 
+
+            inputBox.val(allKeywords); // Set the input box value to the concatenated keywords
+
+
+            // Mapping and displaying case files data
+            var caseFilesDiv = $('#caseFilesDiv');
+            caseFilesDiv.empty();
+            data.case_files.forEach(function(file, index) {
+                var div = $("<div class='main-selectbox'>").text(file.file_name);
+
+
+                    div.click(function() {
+                                $('.main-selectbox').removeClass('selected');
+                                $(this).toggleClass('selected'); 
+                                
+
+                                
+                                // Get the selected value and update the select box
+                                var selectedValue = $(this).text();
+                            
+                                                            
+                                $('#selectedPrompt').empty().append($('<option>', {
+                                    value: selectedValue,
+                                    text: selectedValue
+                                }));
+                            });
+
+                caseFilesDiv.append(div);
+            });
+
+
+                // var staticPromptsDiv = $('#staticPromptsDiv');
+                // staticPromptsDiv.empty();
+                // data.static_prompts.forEach(function(staticPrompt, index) {
+                //     var personalDiv = $("<div class='main-selectbox'>").text(staticPrompt.personal_development);
+                //     staticPromptsDiv.append(personalDiv);
+
+                //     var meetingDiv = $("<div class='main-selectbox'>").text(staticPrompt.meeting_attended);
+                //     staticPromptsDiv.append(meetingDiv);
+
+                //     // Attach click event to both personalDiv and meetingDiv
+                //     personalDiv.add(meetingDiv).click(function() {
+                //         $('.main-selectbox').removeClass('selected');
+                //         $(this).toggleClass('selected');
+                        
+                //         var selectedValue = $(this).text();
+                //         ;
+                //         $('#selectedPrompt').append($('<option>', {
+                //             value: selectedValue,
+                //             text: selectedValue
+                //         }));
+                //     });
+                // });
+
+
+
+                var staticPromptsDiv = $('#staticPromptsDiv');
+                staticPromptsDiv.empty();
+
+                data.static_prompts.forEach(function(staticPrompt, index) {
+                    var personalDiv = $("<div class='main-selectbox'>").text(staticPrompt.personal_development);
+                    staticPromptsDiv.append(personalDiv);
+
+                    var meetingDiv = $("<div class='main-selectbox'>").text(staticPrompt.meeting_attended);
+                    staticPromptsDiv.append(meetingDiv);
+
+                    // Attach click event to both personalDiv and meetingDiv
+                    personalDiv.add(meetingDiv).click(function() {
+                        $('.main-selectbox').removeClass('selected');
+                        $(this).toggleClass('selected');
+                        
+                        var selectedValue = $(this).text();
+
+                        // Clear existing options and add the selected value as an option
+                        $('#selectedPrompt').empty().append($('<option>', {
+                            value: selectedValue,
+                            text: selectedValue
+                        }));
+
+        // Optional: Trigger change event if you need to capture this event elsewhere
+        $('#selectedPrompt').trigger('change');
+    });
+});
+
+
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching data:", error);
+        },
+    });
+}
+
+$(document).ready(function () {
+    fetchDataAgain();
+});
 
 
 </script>

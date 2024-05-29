@@ -19,17 +19,22 @@ def publish_post(post_id):
     post = GeneratePost.objects.get(pk=post_id)
     fb_data = None
     linkedin_data = None
-    
+    print(post.channel,'=======================================channel')
     if 'Facebook' in post.channel:
         fb_token = UserAccessToken.objects.filter(user=post.user, types='Facebook', page_id=post.page_id).first()
         
         if fb_token:
             if post.image:
                 image_url = post.image.url
+                print(image_url,'------------------------image_url')    
             else:
+                print('esleeeeeee')
                 image_url = post.generated_image
-
-            fb_data = create_post_image(post.page_id, fb_token.page_access_token, post.generated_fb_post, image_url)
+            if image_url:
+                fb_data = create_post_image(post.page_id, fb_token.page_access_token, post.generated_fb_post, image_url)
+            else:
+                fb_data_post = create_post_fb(post.page_id, fb_token.page_access_token, post.generated_fb_post)
+            # fb_data = create_post_image(post.page_id, fb_token.page_access_token, post.generated_fb_post, image_url)
             if post.fb_video:
                 fb_video = post.fb_video.url
                 uploaded_fb_video = fb_upload_video(fb_token.page_access_token, post.page_id, post.generated_fb_post, fb_video)
@@ -42,6 +47,10 @@ def publish_post(post_id):
             if fb_data:
                 fb_data_save = json.loads(fb_data.text)
                 post.facebook_page_post_id = fb_data_save.get("post_id", None)
+                post.post_status = 'Live'
+            elif fb_data_post:
+                fb_data_save = json.loads(fb_data_post.text)
+                post.facebook_page_post_id = fb_data_save.get("id", None)
                 post.post_status = 'Live'  # Update post status only if Facebook post was successful
             else:
                 post.facebook_page_post_id = None
@@ -108,8 +117,11 @@ def publish_post(post_id):
 
 @shared_task
 def publish_scheduled_posts():
-    now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-    formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
+    # now = datetime.datetime.now(pytz.timezone('Asia/Kolkata')) #our time zone
+    client_timezone = pytz.timezone('Europe/London')  # Assuming your client is in the UK
+    now = timezone.now().astimezone(client_timezone)
+    formatted_now = now.strftime('%Y-%m-%d %H:%M:%S') 
+    print(formatted_now,'--------')
     scheduled_posts = GeneratePost.objects.filter(post_status='Approve',post_date__lt=formatted_now)
     # scheduled_posts = GeneratePost.objects.filter(Q(post_date__lt=now) & Q(post_status='Inprogress'))
     for post in scheduled_posts:

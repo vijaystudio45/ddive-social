@@ -386,16 +386,6 @@ a.footer-content-social {
       </div>
                 </div>
 
-<div class="mb-8 w-full">
-    <select class="signup-form" name="company_list">
-        <option value="">Select Company List</option>
-        {% for list_item in lists %}
-            <option value="{{ list_item.id }}">{{ list_item.title }}</option>
-        {% endfor %}
-    </select>
-    <span class="validation-message" id="companyListValidation"></span>
-</div>
-
       <div class="fv-row mb-10">
           <label>
               <input class="form-check-input" type="checkbox" name="toc" value="1" />

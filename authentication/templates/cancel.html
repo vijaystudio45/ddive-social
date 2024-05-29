@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+{% block title %} Cancel {% endblock title%}
+{% block content %}
+{% load static %}
+
+<style>
+
+.alert.alert-success {
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    align-items: center;
+}
+
+h1.thankspay {
+    font-size: 30px;
+    color: red;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.create-comp-pay {
+    text-align: center;
+}
+
+
+a.company-paylink {
+    border: 2px solid #174c6e;
+    color: #174c6e;
+    padding: 12px 12px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+
+.success-paymentimg {
+    display: flex;
+    justify-content: center;
+}
+
+img.success-payment {
+    width: 250px;
+}
+
+</style>
+
+
+<div class="alert alert-success" role="alert">
+    <div>
+<div class="success-paymentimg">
+<img class="success-payment"  src="{% static 'assets/media/images/cancelimg-removebg-preview.png' %} "/>
+</div>
+
+
+    <div>
+  <h1 class="thankspay">Forgot something?.</h1>
+</div>
+
+<div class="create-comp-pay">
+
+  <a class="company-paylink"
+  href="{% url 'home' %}"
+      >Go to Home</a>
+</div>
+</div>
+</div>
+
+{% endblock content %}

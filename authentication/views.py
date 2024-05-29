@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.models import User
-from authentication.models import CustomUser as User
+from authentication.models import CustomUser as User,Category,TeamMember,SocialMediaSection,Appointment,SocialMediaFile,StaticPrompts,Prompt,Payment,Voucher,VoucherUsage
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -27,6 +27,7 @@ from pyfacebook import GraphAPI
 import uuid
 import os
 import requests
+from socialcontact.settings import BASE_URL
 from social_media_post.models import UserAccessToken
 from authentication.permissions import admin_only
 from .helper import StringEncoder
@@ -41,14 +42,8 @@ def index(request):
 
 
 
-
+# @admin_only
 def signup(request):
-
-
-    if not request.user.is_superuser:
-        return redirect('/')
-
-
 
     lists = CompanyList.objects.all()
   
@@ -58,7 +53,7 @@ def signup(request):
         email = request.POST['email']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        company_list_id = request.POST.get('company_list')
+        # company_list_id = request.POST.get('company_list')
 
         # Check if username already exists
         if User.objects.filter(username=username).exists():
@@ -72,10 +67,10 @@ def signup(request):
         # Create user
         new_user =User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
         # Save the selected company list to the user
-        if company_list_id:
-            company_list = CompanyList.objects.get(id=company_list_id)
-            new_user.company = company_list
-            new_user.save()
+        # if company_list_id:
+        #     company_list = CompanyList.objects.get(id=company_list_id)
+        #     new_user.company = company_list
+        #     new_user.save()
 
         success_message = "Signup successful. You can now login."
         return HttpResponse(success_message)
@@ -186,6 +181,12 @@ def LinkeInAuthentication(request):
     url = f"{settings.LINKEDIN_BASE_URL}?response_type=code&client_id={settings.SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY}&state=random&redirect_uri={settings.LINKEDIN_REDIRECT_URL}&scope={settings.SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE}"
     return redirect(url)
 
+# def LinkeInAuthentication(request, force_reauth=True):    
+#     if not  force_reauth:
+#         return render(request, 'Re-authenticate.html')
+#     auth_url = f"{settings.LINKEDIN_BASE_URL}?response_type=code&client_id={settings.SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY}&state=random&redirect_uri={settings.LINKEDIN_REDIRECT_URL}&scope={settings.SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE}"
+#     return redirect(auth_url)
+
 
 
 
@@ -214,6 +215,15 @@ def LinkedInAcessToken(request):
         access_token = response_json['access_token']
         return redirect('/')
     return HttpResponse("something went wrong")
+
+
+
+
+
+
+
+
+
 
 
 
@@ -288,7 +298,118 @@ def facebookInAcessToken(request):
             return redirect('/')  
     else:
         return redirect('/')
-        # return HttpResponse("Something went wrong") 
+        # return HttpResponse("Something went wrong")  
+
+
+
+
+
+
+
+# def authenticate_with_facebook(request):
+#     # if request.method == 'GET':
+#         auth_url = f'https://www.facebook.com/v12.0/dialog/oauth?client_id={app_id}&redirect_uri={redirect_uri}&scope=business_management,email,public_profile'
+#         return redirect(auth_url)
+
+
+
+# def facebookInAcessToken(request):
+#     auth_code = request.GET.get("code", None)
+
+#     token_url = f'https://graph.facebook.com/v12.0/oauth/access_token?client_id={app_id}&redirect_uri={redirect_uri}&client_secret={app_secret}&code={auth_code}'
+#     response = requests.get(token_url)
+#     data = response.json()
+#     access_token = data['access_token']
+
+#     user_info_url = f'https://graph.facebook.com/v12.0/me?fields=id,name,email&access_token={access_token}'
+#     user_info_response = requests.get(user_info_url)
+#     user_info = user_info_response.json()
+
+#     if auth_code:
+#         user_token = UserAccessToken.objects.filter(user=request.user, types='Facebook')
+#         if user_token:
+#             new_user_token = user_token.first()
+#             new_user_token.token = access_token
+#             new_user_token.save()
+
+#         else:
+#             user_token = UserAccessToken.objects.create(user=request.user, types='Facebook',
+#                                                         token=access_token)
+#             user_token.save()
+#         access_token = access_token
+#         return redirect('/')
+#     return HttpResponse("something went wrong")
+
+
+
+
+
+
+
+
+
+
+
+# def CreatePost(request):
+#     if request.method == 'POST':
+#         titl1e = request.POST.get('title')
+#         print("herer is ",titl1e)
+#         post_date = request.POST.get('post_date')
+#         image = request.FILES.get('image')
+#         option = request.POST.get('option')
+#         description = request.POST.get('description')
+
+#         item = PostList.objects.create(title=titl1e, post_date=post_date, image=image, option=option, description=description)
+#         item.save()
+#         try:
+#             post_on_facebook(titl1e, description)  # Assuming image.url is the URL of the image
+#         except Exception as e:
+#             # Handle exceptions here
+#             print("Failed to post on Facebook:", e)
+#         return redirect('list')
+#     return render(request, 'createpost.html')
+
+# def post_on_facebook(titl1e, description):
+#     # Initialize the GraphAPI with your access token
+#     graph = GraphAPI(access_token=settings.FACEBOOK_ACCESS_TOKEN)
+    
+#     # Define the parameters of the post
+#     params = {
+#         'message': titl1e + "\n\n" + description
+#     }
+    
+#     # If there's an image, add it to the parameters
+    
+#     # Post to Facebook
+#     graph.put_object(parent_object='me', connection_name='feed', **params)
+# # post_on_facebook("Title", "Description", "https://example.com/image.jpg")
+
+
+
+
+
+# def ItemList(request):
+#     item = PostList.objects.all()
+#     return render(request,'list.html',{'item':item})
+
+# def update_item(request, pk):
+#     item = get_object_or_404(PostList, pk=pk)
+#     if request.method == 'POST':
+#         item.title = request.POST['title']
+#         item.post_date = request.POST['post_date']
+#         if 'image' in request.FILES:
+#             item.image = request.FILES['image']
+#         item.option = request.POST['option']
+#         item.description = request.POST['description']
+#         item.save()
+#         return redirect('list')
+#     return render(request, 'update.html', {'item': item})
+
+
+# def delete_item(request, pk):
+#     item = get_object_or_404(PostList, pk=pk)
+#     item.delete()
+#     return redirect('list')
    
 
 
@@ -306,8 +427,12 @@ def calenderview(request):
 
 
 
-##########------------------------------############
+##########----------------SHIVAM--------------############
 from social_media_post.models import GeneratePost
+
+# def PostView(request, pk):
+#     item = get_object_or_404(GeneratePost, pk=pk)
+#     return render(request, 'generatepostview.html', {'item': item})
 
 
 
@@ -338,10 +463,833 @@ def LogoutLinkedinUser(request):
     response = requests.get(linkedin_logout_url)
 
     # Check if the logout request was successful (you may need to adjust this based on the response status or content)
+    print("11111111111111111111111111",response.status_code)
     if response.status_code == 200:
         
         print("Successfully logged out from LinkedIn")
         # Redirect the user regardless of the result of the API call
         return redirect('/')
+
+
+
+
+
+
+
+
+
+
+#----------------------company creation code-------------------------------------#
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Category, CompanyList, TeamMember
+from django.http import HttpResponseBadRequest
+from django.utils.text import slugify
+from django.db import IntegrityError
+from django.core.exceptions import ValidationError
+from authentication.permissions import has_paid_shares
+from django.contrib.auth.decorators import user_passes_test
+
+# View for creating a company
+@user_passes_test(has_paid_shares)
+
+
+def company_create(request):
+    Backend_url= BASE_URL
+    categories = Category.objects.all()
+    team_members = TeamMember.objects.all()
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        title = title.lower()
+        print(title,'uuuuuuuuuuuus')
+        description = request.POST.get('description')
+        # category_id = request.POST.get('category_id')
+        media = request.FILES.get('media')
+
+        if title and description :
+            if title and description:
+                # category = get_object_or_404(Category, pk=category_id)
+                try:
+                    company_instance = CompanyList.objects.create(title=title, description=description, media=media)
+                    if company_instance:
+                        user = User.objects.get(id=request.user.id)
+                        user.company = company_instance
+                        user.save()
+                        
+                except IntegrityError:
+                    # Handle the case where the title is not unique
+                    error_message = "A company with the same title already exists. Please choose a different title."
+                    return JsonResponse({'success': False, 'error_message': error_message},status=400)
+                else:
+                    company_title = company_instance.title
+                    company_title = slugify(company_title)
+                    return JsonResponse({'success': True, 'company_name': company_title,'id':company_instance.id},status=200)
+
+    return render(request, 'company.html',{'categories': categories,'team_members': team_members,'Backend_url':Backend_url})
+    # return JsonResponse({'success': True, 'message': 'Company created Successfully.'},status=201)
+
+
+def company_edit(request, company_id):
+    company_instance = get_object_or_404(CompanyList, id=company_id)
+    team_member = request.user.company.member_company.first()
+    Backend_url= BASE_URL
+
+    if request.method == 'POST':
+        print(request.POST,'popopopjjjjj')
+        # title = request.POST.get('title')
+        # title = title.lower()
+        description = request.POST.get('description')
+        media = request.FILES.get('media')
+        print(request.FILES,'----------------------media')
+
+        if description:
+            try:
+                # company_instance.title = title
+                company_instance.description = description
+
+                if media:
+                    print('Media is present, attempting to save...')
+                    company_instance.media = media
+                    company_instance.save()
+                    print('Media saved successfully.')
+                else:
+                    company_instance.save()
+            except IntegrityError:
+                error_message = "A company with the same title already exists. Please choose a different title."
+                return JsonResponse({'success': False, 'error_message': error_message}, status=400)
+            else:
+                company_title = company_instance.title
+                company_title = slugify(company_title)
+                return JsonResponse({'success': True, 'company_name': company_title, 'id': company_instance.id}, status=200)
+
+    return render(request, 'company_edit.html', {'company': company_instance,'team_member':team_member,'Backend_url':Backend_url})
+
+
+def Companyalldetails(request):
+    user=request.user
+    user_company  = user.company
+    print(user_company,'user_companyuser_company------------')
+
+     # Check if user_company and associated team member exist
+    if user_company:
+        team_member = user_company.member_company.first()  # Assuming there's only one team member per company
+        if team_member:
+            team_member_id = team_member.id
+            team_member_capacity = team_member.capacity
+            team_member_availability_start = team_member.availability_start
+            team_member_availability_end = team_member.availability_end
+        else:
+            team_member_id=None
+            team_member_capacity=None
+            team_member_availability_start=None
+            team_member_availability_end=None
+
+        # Initialize social_media_id
+        social_media_id = None
+        social_category=''
+        social_prompts=''
+        case_files=''
+        
+
+        # Retrieve the SocialMediaSection associated with the company
+        if hasattr(user_company, 'user_company_social'):
+            social_media_section = user_company.user_company_social.first()
+            if social_media_section:
+                social_media_id = social_media_section.id
+                # Get selected social categories and prompts
+                social_category = list(social_media_section.category.all().values('name'))
+                social_prompts = list(social_media_section.prompts.all().values('text','id'))
+                case_files =[{"file_name": file.case_file.file.name} for file in social_media_section.files.all()]
+
+
+        data = {
+            'title':user_company.title,
+            'id':user_company.id,
+            'description':user_company.description,
+            'media': user_company.media.file.name if user_company.media else None,
+            'team_member_id':team_member_id,
+            'team_member_capacity':team_member_capacity,
+            'team_member_availability_start':team_member_availability_start,
+            'team_member_availability_end':team_member_availability_end,
+            'social_media_id':social_media_id,
+            'social_description':social_media_section.description if social_media_section else None,
+            'social_category':social_category,
+            'social_prompts':social_prompts,
+            'case_files':case_files
+        }
+        return JsonResponse({'data':data},status=200)
+
+
+
+
+def company_detail(request, company_name):
+    # print(company_name)
+    Backend_url= BASE_URL
+   
+    # company = get_object_or_404(CompanyList, title=company_name.replace('-', ' '))
+    # team_member = TeamMember.objects.get(company__title=company)
+    # company.url = f'http://127.0.0.1:8000/{company_name}'
+    # company.save()
+    return render(request, 'company_detail.html',{'Backend_url':Backend_url})
+    
+
+def company_all_details(request,company_name):
+
+    company_name =  company_name
+    # print(company_name,'iiiiiiiiiiiiiiii')
+    try:
+       
+        company = get_object_or_404(CompanyList, title=company_name.replace('-', ' '))
+        team_member = TeamMember.objects.get(company__title=company)
+        company.url = f'{BASE_URL}/{company_name}'
+        company.save()
+
+         # Convert datetime objects to strings with date and time separately
+        availability_start_date = team_member.availability_start.strftime('%Y-%m-%d')
+        availability_start_time = team_member.availability_start.strftime('%H:%M:%S')
+        availability_end_date = team_member.availability_end.strftime('%Y-%m-%d')
+        availability_end_time = team_member.availability_end.strftime('%H:%M:%S')
+        
+        data = {
+            'company': {
+                'name': company.title,
+                'description': company.description,
+                'media': company.media.url if company.media else ''
+                # Add other fields you want to include
+            },
+            'team_member': {
+                'name': team_member.capacity,
+                'availability_start_date': availability_start_date,
+                'availability_start_time': availability_start_time,
+                'availability_end_date': availability_end_date,
+                'availability_end_time': availability_end_time
+                # Add other fields you want to include
+            }
+        }
+        
+        return JsonResponse(data)
+    except Exception as e:
+        # Handle exceptions, return appropriate error response
+        return JsonResponse({'error': str(e)}, status=500)
+
+# View for rendering the company creation page
+# def categories(request):
+#     if request.method == 'GET':
+#         categories = Category.objects.all()
+#         print('=================categories')
+#         return render(request, 'company.html', {'categories': categories})
+
+# View for rendering the team member list page
+# def team_member_list(request):
+#     team_members = TeamMember.objects.all()
+#     return render(request, 'team_member_list.html', {'team_members': team_members})
+
+def team_member_add(request):
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        # print(request.POST,'popopopopop')
+        availability_start = request.POST.get('availability_start')
+        availability_end = request.POST.get('availability_end')
+        company_id = request.POST.get('company_id')
+        if name:
+            new_member = TeamMember.objects.create(capacity=name, availability_start=availability_start,availability_end=availability_end,company_id=company_id)
+            return JsonResponse(
+                {'success': True, 'message': 'Team member added successfully', 'member_id': new_member.id})
+        else:
+            return JsonResponse({'success': False, 'message': 'Name field is required'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Only POST requests are allowed'})
+
+def team_member_list(request):
+    team_members = TeamMember.objects.filter(company=request.user.company)
+    # print(request.user.company,'popopopopop')
+
+    team_members_data = []
+
+    for member in team_members:
+        # Create a dictionary for each team member
+        member_data = {
+            "id":member.id,
+            "name": member.capacity,
+            "availability_start": member.availability_start,
+            "availability_end": member.availability_end
+        }
+        # Append the member data to the list
+        team_members_data.append(member_data)
+    # Return JSON response
+    return JsonResponse({'team_members': team_members_data})
+
+# View for editing a team member
+def team_member_edit(request, pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        availability_start = request.POST.get('availability_start')
+        availability_end = request.POST.get('availability_end')
+        if name:
+            member.capacity = name
+            member.availability_start = availability_start
+            member.availability_end = availability_end
+            member.save()
+            return JsonResponse({'success': True, 'message': 'Team member updated successfully'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Name field is required'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Only POST requests are allowed'})
+
+
+# View for deleting a team member
+def team_member_delete(request, pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+    if request.method == 'DELETE':
+        member.delete()
+        return JsonResponse({'success': True, 'message': 'Team member deleted successfully'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+    
+
+def get_particular_member(request,pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+    data={
+        "id":member.id,
+        "name":member.name,
+        "availability": member.availability,
+    }
+    return JsonResponse({'team_members': data})
+
+
+
+def social_media_post(request):
+    if request.method == 'POST':
+        company = request.POST.get('businessfacts')
+        prompt_ids = request.POST.getlist('propertystrategies')
+        # keywords = request.POST.get('Keywords')
+        category_ids = request.POST.getlist('category')
+        company_id = request.POST.get('company_id')
+        files = request.FILES.getlist('Brochuremedia')  # Access multiple uploaded files
+        # print(files,'ppppp')
+
+        # Create the SocialMediaSection instance
+        social_media_section = SocialMediaSection.objects.create(
+            description=company,
+            # keywords=keywords,
+            user=request.user,
+            company_id=company_id
+        )
+
+        # Associate prompts with the created SocialMediaSection
+        prompts = Prompt.objects.filter(id__in=prompt_ids)
+        social_media_section.prompts.add(*prompts)
+
+        # Associate categories with the created SocialMediaSection
+        categories = Category.objects.filter(id__in=category_ids)
+        social_media_section.category.add(*categories)
+
+        #associate categories with the created company
+        company_category = CompanyList.objects.get(id=company_id)
+        # print(company_category)
+        categories = Category.objects.filter(id__in=category_ids)
+        company_category.category.add(*categories)
+
+        # Save the uploaded files
+        for file in files:
+            SocialMediaFile.objects.create(
+                social_media_section=social_media_section,
+                case_file=file
+            )
+
+        return JsonResponse({'success': True}, status=200)
+        
+
+def edit_social_media_post(request):
+    Backend_url= BASE_URL
+
+    return render(request,'company_edit.html',{'Backend_url':Backend_url})
+
+
+def edit_social_media_post(request, post_id):
+    Backend_url = BASE_URL
+    if request.method == 'POST':
+        company = request.POST.get('businessfacts')
+        prompt_ids = request.POST.getlist('propertystrategies')
+        category_ids = request.POST.getlist('category')
+        company_id = request.POST.get('company_id')
+        files = request.FILES.getlist('Brochuremedia')  # Access multiple uploaded files
+
+        if post_id:
+            # Fetch the existing SocialMediaSection instance for editing
+            social_media_section = get_object_or_404(SocialMediaSection, id=post_id)
+        else:
+            # Create a new SocialMediaSection instance
+            social_media_section = SocialMediaSection(
+                description=company,
+                company_id=company_id,
+                user=request.user
+            )
+            social_media_section.save()
+
+        social_media_section.description = company
+        social_media_section.company_id = company_id
+        social_media_section.user = request.user
+        social_media_section.save()
+
+        # Clear existing relationships and add new ones
+        social_media_section.prompts.clear()
+        prompts = Prompt.objects.filter(id__in=prompt_ids)
+        social_media_section.prompts.add(*prompts)
+
+        social_media_section.category.clear()
+        categories = Category.objects.filter(id__in=category_ids)
+        social_media_section.category.add(*categories)
+
+        # Associate categories with the company
+        company_category = get_object_or_404(CompanyList, id=company_id)
+        company_category.category.clear()
+        categories = Category.objects.filter(id__in=category_ids)
+        company_category.category.add(*categories)
+
+        # Save the uploaded files
+        # If editing, clear old files before adding new ones
+        SocialMediaFile.objects.filter(social_media_section=social_media_section).delete()
+
+        for file in files:
+            SocialMediaFile.objects.create(
+                social_media_section=social_media_section,
+                case_file=file
+            )
+
+        return JsonResponse({'success': True}, status=200)
+    else:
+        return render(request, 'company_edit.html', {'Backend_url': Backend_url})
+    # if request.method == 'POST':
+    #     company = request.POST.get('businessfacts')
+    #     prompt_ids = request.POST.getlist('propertystrategies')
+    #     category_ids = request.POST.getlist('category')
+    #     company_id = request.POST.get('company_id')
+    #     files = request.FILES.getlist('Brochuremedia')  # Access multiple uploaded files
+
+    #     # Fetch the existing SocialMediaSection instance for editing
+    #     social_media_section = get_object_or_404(SocialMediaSection, id=post_id)
+    #     social_media_section.description = company
+    #     social_media_section.company_id = company_id
+    #     social_media_section.user = request.user
+    #     social_media_section.save()
+
+    #     # Clear existing relationships and add new ones
+    #     social_media_section.prompts.clear()
+    #     prompts = Prompt.objects.filter(id__in=prompt_ids)
+    #     social_media_section.prompts.add(*prompts)
+
+    #     social_media_section.category.clear()
+    #     categories = Category.objects.filter(id__in=category_ids)
+    #     social_media_section.category.add(*categories)
+
+    #     # Associate categories with the company
+    #     company_category = get_object_or_404(CompanyList, id=company_id)
+    #     company_category.category.clear()
+    #     categories = Category.objects.filter(id__in=category_ids)
+    #     company_category.category.add(*categories)
+
+    #     # Save the uploaded files
+    #     # If editing, clear old files before adding new ones
+    #     SocialMediaFile.objects.filter(social_media_section=social_media_section).delete()
+        
+    #     for file in files:
+    #         SocialMediaFile.objects.create(
+    #             social_media_section=social_media_section,
+    #             case_file=file
+    #         )
+
+    #     return JsonResponse({'success': True}, status=200)
+    # else:
+    #     return render(request, 'company_edit.html', {'Backend_url': Backend_url})
+
+
+
+import requests
+import os
+from openai import OpenAI
+import json
+
+OPEN_API_KEY = os.getenv('OPEN_API_KEY')
+client = OpenAI(api_key=OPEN_API_KEY)
+
+
+def generate_category_prompt(text):
+    prompt = f"generate 10 crisp complete promts in 2 lines for the company category {text} for online posts with complete sentence at end."
+    response = client.completions.create(
+        model="gpt-3.5-turbo-instruct",
+        prompt=prompt,
+        max_tokens=400
+    )
+    prompt_list = response.choices[0].text.strip()
+    return prompt_list
+
+
+def generate_prompt(request):
+    data=json.loads(request.body)
+    category_ids=data['category_ids']
+    # category = Category.objects.get(id=pk)
+    category_text = []
+    serialized_prompts = []
+    case_files = []
+    files = SocialMediaFile.objects.filter(social_media_section__user=request.user)
+    for i in files:
+        file_name = os.path.basename(i.case_file.name)
+        data = {
+            'files':file_name
+        }
+        case_files.append(data)
+
+    for i in category_ids:
+        category_data = Category.objects.get(id=i)
+        text = {
+            'text':category_data.text,
+            'category_name':category_data.name,
+            'category_id':category_data.id
+        }
+        category_text.append(text)
+    # print(category_text)
+
+
+    if category_text:
+        for i in category_text:
+            text = i['text']
+            category_id = i['category_id']
+            prompts = generate_category_prompt(text)
+            # print(prompts)
+
+            # prompts = generate_category_prompt(category_name)
+            prompt_list = prompts.split('\n')
+            # print(prompt_list,'prompt_listprompt_list')
+            # print(prompt_list,'prompt_listprompt_list')
+            # Create a list of dictionaries containing index and prompt
+            indexed_prompts=[]
+            for prompt in prompt_list:
+                # data = prompt.strip()
+                # indexed_prompts.append(data)
+                indexed_prompts.append(Prompt(category_id=category_id, text=prompt.strip()))
+
+            # Bulk create the prompts
+            created_prompts = Prompt.objects.bulk_create(indexed_prompts)
+
+            # Serialize the necessary data
+            # serialized_prompts = [{'category': prompt.category.name, 'text': prompt.text,'id':prompt.id} for prompt in indexed_prompts]
+            # Serialize the created prompts and add them to the list
+            serialized_prompts.extend([{'category': prompt.category.name, 'text': prompt.text, 'id': prompt.id} for prompt in created_prompts])
+
+
+        # return JsonResponse({'prompts': serialized_prompts})
+        return JsonResponse({'prompts': serialized_prompts,'case_files':case_files})
+
+
+            # return JsonResponse(indexed_prompts,safe=False)
+            # return JsonResponse({'prompt':prompts})
+    else:
+        return JsonResponse({'message':'Please select category.'})
+
+from django.core import serializers
+
+def StaticPromptdata(request):
+    datas = StaticPrompts.objects.all()
+    dataa = []
+    for i in datas:
+        dataa.append((i.personal_development))
+        dataa.append((i.meeting_attended))
+        # data = {
+        #     'personal_development':i.personal_development,
+        #     'meeting_attended':i.meeting_attended
+        # }
+        # dataa.append(data)
+    return JsonResponse({'data': dataa})
+
+def get_unique_prompts(request):
+    user_company = request.user.company
+    print(user_company,'---------user_company')
+
+    # Retrieve all category IDs associated with the user's company
+    company_categories = user_company.category.values_list('id', flat=True)
+    print(company_categories,'company_categories')
+    static_prompts = list(StaticPrompts.objects.all().values())  # Convert StaticPrompts queryset to a list of dictionaries
+    comp_categories=[]
+    all_case_files = []  # List to store all case files of the user
+    # static_prompts=[]
+    for i in company_categories:
+        comp_categories.append(i)
+
+    # sections = SocialMediaSection.objects.filter(company=user_company, prompts__category__in=comp_categories).distinct()
+    sections = SocialMediaSection.objects.filter(company=user_company, user=request.user).distinct()
+
+    printed_prompts = set()
+    printed_categories = set()
+    unique_prompts = []
+    unique_categories = []
+
+    for section in sections:
+        prompts = section.prompts.all()
+        print(prompts,'-------prompts')
+        categories = section.category.all()
+        files = section.files.all()  # Retrieve all case files associated with the section
+        
+        for prompt in prompts:
+            print(prompt,'-0-0-0-0-0-')
+            if prompt.text not in printed_prompts:
+                unique_prompts.append({"text": prompt.text,"prompt_id":prompt.id})
+                printed_prompts.add(prompt.text)
+
+        for category in categories:
+            if category.id not in printed_categories:
+                unique_categories.append({"id": category.id, "name": category.name,"keywords":category.keywords})
+                printed_categories.add(category.id)
+
+        for file in files:
+            file_name = os.path.basename(file.case_file.name)
+            all_case_files.append({"file_name": file_name,'id':file.id})
+            
+        # for i in static_prompt:
+        #     static_prompts.append(i)
+
+    response_data = {
+        "prompts": unique_prompts,
+        "categories": unique_categories,
+        "case_files": all_case_files,
+        "static_prompts":static_prompts
+    }
+
+    return JsonResponse(response_data, safe=False)
+    # user_category_id = request.user.company.category.id
+    # print(user_category_id,'user_category_id')
+    # sections = SocialMediaSection.objects.filter(company=user_company, prompts__category=user_category_id).distinct()
+    # printed_prompts = set()  # Set to keep track of printed prompts
+    # printed_categories = set()  # Set to keep track of printed categories
+    # unique_prompts = []  # List to store unique prompts
+    # unique_categories = [] 
+    # for section in sections:
+    #     prompts = section.prompts.all()
+    #     categories = section.category.all()
+    
+    #     for prompt in prompts:
+    #         if prompt.text not in printed_prompts:  # Check if the prompt has not been printed yet
+    #             unique_prompts.append({"text": prompt.text})
+    #             printed_prompts.add(prompt.text)
+
+    #     for category in categories:
+    #         if category.id not in printed_categories:  # Check if the category has not been printed yet
+    #             unique_categories.append({"id": category.id, "name": category.name})
+    #             printed_categories.add(category.id)
+
+    # response_data = {
+    # "prompts": unique_prompts,
+    # "categories": unique_categories
+    # }
+
+    # # Serialize the data to JSON
+    # response_json = json.dumps(response_data)
+
+
+    # # Return JSON response
+    # return JsonResponse(response_json, safe=False)
+
+from datetime import datetime
+def book_slot(request):
+    # name = request.POST.get('slotname')
+    # email = request.POST.get('slotemail')
+    # mobile = request.POST.get('slotmobile')
+    # start_time = request.POST.get('start_time')
+    # print(start_time)
+    # end_time = request.POST.get('end_time')
+    # print(end_time)
+    # availability_start = request.POST.get('availability_start_date')
+    # print(availability_start +' '+ start_time )
+    # availability_start = availability_start +' '+ start_time 
+    # availability_end = request.POST.get('availability_end_date')
+    # print(availability_end)
+    # availability_end = availability_end +' '+ end_time 
+    # capacity = request.POST.get('capacity')
+    # print(capacity,'popopop')
+
+    # # Check if the slot is already fully booked within the specified time frame
+    # if Appointment.objects.filter(availability_start__lte=availability_start, availability_end__gte=availability_end).count() >= capacity:
+    #     return JsonResponse({'success': False, 'message': 'Slot fully booked'})
+    # else:
+    #     # Check if the requested time frame is already fully booked
+    #     if Appointment.objects.filter(availability_start=availability_start, availability_end=availability_end).count() >= capacity:
+    #         return JsonResponse({'success': False, 'message': 'Slot fully booked at this time'})
+    #     else:
+    #         # If the slot is available, create a new booking
+    #         try:
+    #             user = request.user
+    #             booking = Appointment.objects.create(name=name,email=email,mobile=mobile,availability_start=availability_start, availability_end=availability_end)
+    #             return JsonResponse({'success': True, 'message': 'Slot booked successfully'})
+    #         except Exception as e:
+    #             return JsonResponse({'success': False, 'message': str(e)})
+            
+    name = request.POST.get('slotname')
+    email = request.POST.get('slotemail')
+    mobile = request.POST.get('slotmobile')
+    start_time_str = request.POST.get('start_time')  # Assuming the format is "HH:MM am/pm"
+    start_time = datetime.strptime(start_time_str, '%I:%M %p').time()
+    print(start_time)
+    
+    # end_time_str = request.POST.get('end_time')  # Assuming the format is "HH:MM am/pm"
+    # end_time = datetime.strptime(end_time_str, '%I:%M %p').time()
+    # print(end_time)
+    
+    availability_start_date = request.POST.get('availability_start_date')
+    availability_start = datetime.strptime(availability_start_date, '%Y-%m-%d').date()
+    print(availability_start)
+    availability_start = datetime.combine(availability_start, start_time)
+    
+    # availability_end_date = request.POST.get('availability_end_date')
+    # availability_end = datetime.strptime(availability_end_date, '%Y-%m-%d').date()
+    # print(availability_end)
+    # availability_end = datetime.combine(availability_end, end_time)
+    
+    capacity = request.POST.get('capacity')
+    print(capacity)
+
+    # # Check if the slot is already fully booked within the specified time frame
+    # if Appointment.objects.filter(availability_start__lte=availability_start, availability_end__gte=availability_end).count() >= int(capacity):
+    #     return JsonResponse({'success': False, 'message': 'Slot fully booked'},status=400)
+    # else:
+    #     # Check if the requested time frame is already fully booked
+    #     if Appointment.objects.filter(availability_start=availability_start, availability_end=availability_end).count() >= int(capacity):
+    #         return JsonResponse({'success': False, 'message': 'Slot fully booked at this time'})
+    #     else:
+            # If the slot is available, create a new booking
+    try:
+        user = request.user
+        booking = Appointment.objects.create(name=name,email=email,mobile=mobile,availability_start=availability_start)
+        return JsonResponse({'success': True, 'message': 'Slot booked successfully'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)})
+
+
+
+#get_category_list
+
+def category_list(request):
+    category = Category.objects.values('name', 'id')
+    
+    seen_names = set()
+    categories = []
+    
+    for i in category:
+        if i['name'] not in seen_names:
+            seen_names.add(i['name'])
+            data = {'name': i['name'], 'id': i['id']}
+            categories.append(data)
+    
+    return JsonResponse({'success': True, 'data': categories})
+
+
+
+#----------------------------------------stripe payment-------------------------------------#
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PBIQJ0213GG69z5UUnDpCAWivxURJZ3NhKLikdrIyqkPLcn4IUZjtlmJwfJ9qspaQV3gBWpqsKvlPvdrEibsjmU00KUSV0YNB'
+STRIPE_SECRET_KEY = 'sk_test_51PBIQJ0213GG69z5IF6BEESZCzorUs12neFW4suGUm41HbmmqP7OtODU85PBtL5SzVIi33S3f5ZorWZRCadsu1oe00IDoiGGh7'
+
+# PAYMENT_SUCCESS_URL = 'http://127.0.0.1:8000/success'
+# PAYMENT_CANCEL_URL = 'http://127.0.0.1:8000/cancel/'
+import stripe
+from django.conf import settings
+from django.shortcuts import redirect
+from django.views import View
+
+stripe.api_key = STRIPE_SECRET_KEY
+
+
+class CreateStripeCheckoutSessionView(View):
+    """
+    Create a checkout session and redirect the user to Stripe's checkout page
+    """
+
+    def get(self, request, *args, **kwargs):
+        # price = Price.objects.get(id=self.kwargs["pk"])
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "usd",
+                        "unit_amount": int(100) * 100,
+                        "product_data": {
+                            "name": 'Create Company',
+                            "description": 'Company Creations Charge',
+                            "images": [
+                                # f"{settings.BACKEND_DOMAIN}/{price.product.thumbnail}"
+                            ],
+                        },
+                    },
+                    "quantity": '1',
+                }
+            ],
+            metadata={'id': request.user.id},
+            mode="payment",
+            success_url=f"{settings.BASE_URL}/success/?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{settings.BASE_URL}/cancel/",
+        )
+        print(checkout_session,'ppppooolllll')
+        return redirect(checkout_session.url)
+
+
+from django.views.generic import TemplateView
+from django.views.generic.base import TemplateView
+
+
+class SuccessView(TemplateView):
+    template_name = "success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        session_id = self.request.GET.get('session_id')
+        print(session_id,'--------session_id')
+
+        if session_id:
+            try:
+                # Retrieve the session from Stripe
+                session = stripe.checkout.Session.retrieve(session_id)
+                print(session['payment_status'],'-------sessionsession')
+                if session['payment_status']:
+                    Payment.objects.create(user=self.request.user,is_paid=True)
+                context['session'] = session
+            except stripe.error.StripeError as e:
+                # Handle error appropriately
+                context['error'] = str(e)
+
+        return context
+
+
+class CancelView(TemplateView):
+    template_name = "cancel.html"
+
+
+
+#----voucher check code--------#
+
+def check_voucher_code(request):
+
+    if request.method == 'POST':
+        code = request.POST.get('code', '').strip()
+        try:
+            voucher = Voucher.objects.get(code=code,is_active=True)
+        except Voucher.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Invalid voucher code.'}, status=400)
+
+        if not voucher.is_active:
+            return JsonResponse({'success': False, 'message': 'Voucher code is not active.'}, status=400)
+
+        if VoucherUsage.objects.filter(voucher_code=voucher, user=request.user, is_used=True).exists():
+            return JsonResponse({'success': False, 'message': 'Voucher code already used.'}, status=400)
+
+        # Create a VoucherUsage entry for this user and mark it as used
+        VoucherUsage.objects.create(voucher_code=voucher, is_used=True, user=request.user)
+
+        return JsonResponse({'success': True, 'message': 'Voucher code is valid.'}, status=200)
+
+
+def voucher_page(request):
+    return render(request, 'check_voucher.html')
 
     

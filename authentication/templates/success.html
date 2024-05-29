@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %} Success {% endblock title%}
+{% block content %}
+{% load static %}
+
+<style>
+
+.alert.alert-success {
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    align-items: center;
+}
+
+h1.thankspay {
+    font-size: 30px;
+    color: #174c6e;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.create-comp-pay {
+    text-align: center;
+}
+
+
+a.company-paylink {
+    border: 2px solid #174c6e;
+    color: #174c6e;
+    padding: 12px 12px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+
+.success-paymentimg {
+    display: flex;
+    justify-content: center;
+}
+
+img.success-payment {
+    width: 250px;
+}
+
+</style>
+
+
+<div class="alert alert-success" role="alert">
+    <div>
+<div class="success-paymentimg">
+<img class="success-payment"  src="{% static 'assets/media/images/payment.gif' %} "/>
+</div>
+
+
+    <div>
+  <h1 class="thankspay">Thanks for the payment.</h1>
+</div>
+
+<div class="create-comp-pay">
+  <a class="company-paylink"
+      href="{% url 'company-create' %}"
+      >Click here to Create Company</a>
+</div>
+</div>
+</div>
+
+{% endblock content %}

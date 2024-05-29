@@ -325,11 +325,12 @@ a.footer-content-social {
     </div>
 	
   </form>
-  {% if request.user.is_superuser %}
   <div class="text-center mb-6">
 	    <a href="{% url 'signup' %}" class="link-primary fw-bold text-white  loginFont22">Sign Up</a>
 	</div>
-  {% endif %}
+<div class="text-center">
+	<a href="{% url 'password_reset' %}" class="link-primary fs-6 fw-bold text-white loginFont22">Reset password</a>
+</div>
 	</div>
 
 <footer class="" style="background: #174c6e">
