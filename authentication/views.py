@@ -851,7 +851,7 @@ def edit_social_media_post(request, post_id):
 
         # Save the uploaded files
         # If editing, clear old files before adding new ones
-        SocialMediaFile.objects.filter(social_media_section=social_media_section).delete()
+        # SocialMediaFile.objects.filter(social_media_section=social_media_section).delete()
 
         for file in files:
             SocialMediaFile.objects.create(
@@ -917,11 +917,11 @@ client = OpenAI(api_key=OPEN_API_KEY)
 
 
 def generate_category_prompt(text):
-    prompt = f"generate 10 crisp complete promts in 2 lines for the company category {text} for online posts with complete sentence at end."
+    prompt = f"generate total 10 crisp complete prompts in 3 lines for the company category {text} for online posts with complete sentence at end and it should be 10 prompts."
     response = client.completions.create(
         model="gpt-3.5-turbo-instruct",
         prompt=prompt,
-        max_tokens=400
+        max_tokens=500
     )
     prompt_list = response.choices[0].text.strip()
     return prompt_list

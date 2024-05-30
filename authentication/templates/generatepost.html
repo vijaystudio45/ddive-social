@@ -107,16 +107,15 @@
                                             <option value="">Select a prompt</option>
                                             </select>
                                     </div>
-                                  
+<!--                                   
                                 <div>
-                                    <!-- <label class="block text-gray-700 text-sm font-bold mb-2 mt-2"
-                                    for="exampleInputEmail1">Case Files</label> -->
+                                   
                                     <div id="caseFilesDiv"  class="grid grid-cols-2 gap-4"> 
                                     </div>
                                     <select hidden name='prompts' id="selectedPrompt">
                                         <option value="">Select a prompt</option>
                                     </select>
-                                    </div>
+                                    </div> -->
 
                                 <div>
                                     <!-- <label class="block text-gray-700 text-sm font-bold mb-2 mt-2"
@@ -596,7 +595,6 @@ function fetchDataAgain() {
                 // });
 
 
-
                 var staticPromptsDiv = $('#staticPromptsDiv');
                 staticPromptsDiv.empty();
 
@@ -621,9 +619,9 @@ function fetchDataAgain() {
                         }));
 
         // Optional: Trigger change event if you need to capture this event elsewhere
-        $('#selectedPrompt').trigger('change');
-    });
-});
+                $('#selectedPrompt').trigger('change');
+            });
+        });
 
 
 

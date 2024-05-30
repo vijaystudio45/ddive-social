@@ -28,6 +28,19 @@
 
 
   <style>
+
+select.caseselctbox {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid #80808063;
+}
+
+
+button.swal2-confirm.swal2-styled {
+    background: #174c6e;
+}
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
       white-space: break-spaces !important;
     }
@@ -955,6 +968,14 @@ function updateCapacity() {
                 multiple />
             </div>
 
+
+            <div class="form-group">
+              <label class="form-title" for="uploadedcase">Case Studies Files</label>
+              <div>
+                <select multiple size="5" class="formbold-form-input" id="uploadedcase" name="uploadedcase"></select>
+              </div>
+            </div>
+
             <div class="form-group">
               <label class="form-title" for="Brochuremedia_">Property Strategies (Choose relevant to your
                 business)</label>
@@ -983,7 +1004,12 @@ function updateCapacity() {
             <div class="form-group">
               <label class="form-title" for="uploadedcase">Case Studies related prompt</label>
               <div>
-                <select multiple size="5" class="formbold-form-input" id="uploadedcase" name="uploadedcase"></select>
+                <!-- <select multiple size="5" class="formbold-form-input" id="uploadedcase" name="uploadedcase"></select> -->
+
+                <select class="caseselctbox">
+<option>No file found</option>
+
+                </select>
               </div>
             </div>
 
