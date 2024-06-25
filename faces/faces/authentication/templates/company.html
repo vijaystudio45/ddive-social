@@ -1,0 +1,1059 @@
+{% extends "base.html" %} {% load static %} {% block css %} {% endblock %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Company</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+</head>
+
+<body>
+
+
+  <style>
+
+button.swal2-confirm.swal2-styled {
+background-color: #174c6e !important;
+  
+}
+
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      white-space: break-spaces !important;
+    }
+
+    .select2-container {
+      width: 100% !important;
+    }
+
+    .maindiv-show {
+      width: 40%;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0px 0px 10px 0px;
+      padding: 30px 30px;
+      border-radius: 12px;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif !important;
+      font-style: normal;
+    }
+
+    .add-comp {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* padding: 0px 30px; */
+    }
+
+    button.action-btnshow {
+      background: #174c6e;
+      color: white;
+      padding: 10px 19px;
+      border-radius: 9px;
+      outline: none;
+    }
+
+    label.form-title {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    button.action-btnshow:hover {
+      background: #2b7db0 !important;
+    }
+
+    .modal {
+      display: none;
+      /* Hide the modals by default */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 8% auto;
+      padding: 30px 25px;
+      border: 1px solid #888;
+      width: 40%;
+    }
+
+    input.input-field {
+      height: 46px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    select#category {
+      height: 46px;
+    }
+
+    input#availability_start {
+      height: 47px;
+    }
+
+    button.action-btnshow.cancel-btn {
+      border: 1px solid #174c6e;
+      background: no-repeat;
+      color: #174c6e;
+      width: 130px;
+    }
+
+    span.close-btn {
+      font-size: 32px;
+      cursor: pointer;
+    }
+
+
+
+    .loader {
+    border: 5px solid #c1b7b7;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    /* display: none; */
+}
+
+.loaderCase {
+    border: 5px solid #c1b7b7;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    /* display: none; */
+}
+
+
+
+.propertystrategies {
+    position: relative;
+}
+
+.loader {
+    border: 5px solid #c1b7b7;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    position: absolute;
+    top: 21px;
+    left: 47%;
+    display: none;
+}
+.loaderCase {
+    border: 5px solid #c1b7b7;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    position: absolute;
+    top: 73%;
+    left: 47%;
+    display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+  </style>
+
+  <script>
+    $(document).ready(function () {
+      $("#uploadedcase").select2();
+      $('#propertystrategies').select2();
+      $('#personaldevelopment').select2();
+      $('#meetingsattended').select2();
+    });
+    // Function to open the create company modal
+    function openCreateCompanyModal() {
+      var createCompanyModal = document.getElementById("createCompanyModal");
+      if (createCompanyModal) {
+        createCompanyModal.style.display = "block";
+      }
+    }
+
+    // Function to close the create company modal
+    function closeCreateCompanyModal() {
+      var createCompanyModal = document.getElementById("createCompanyModal");
+      if (createCompanyModal) {
+        createCompanyModal.style.display = "none";
+      }
+    }
+
+    // Function to open the add team member modal
+    function openAddTeamMemberModal() {
+      var addTeamMemberModal = document.getElementById("addTeamMemberModal");
+      if (addTeamMemberModal) {
+        addTeamMemberModal.style.display = "block";
+      }
+    }
+
+    // Function to close the add team member modal
+    function closeAddTeamMemberModal() {
+      var addTeamMemberModal = document.getElementById("addTeamMemberModal");
+      if (addTeamMemberModal) {
+        addTeamMemberModal.style.display = "none";
+      }
+    }
+
+    // Function to close the modals when clicking outside
+    window.onclick = function (event) {
+      var createCompanyModal = document.getElementById("createCompanyModal");
+      var addTeamMemberModal = document.getElementById("addTeamMemberModal");
+      if (
+        event.target == createCompanyModal ||
+        event.target == addTeamMemberModal
+      ) {
+        createCompanyModal.style.display = "none";
+        addTeamMemberModal.style.display = "none";
+      }
+    };
+
+    // api call
+
+    fetchDataAgain();
+
+    // Function to handle item deletion confirmation
+    function confirmDelete(itemId) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will not be able to recover this item!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Call API to delete the item
+          deleteItem(itemId);
+          fetchDataAgain();
+        }
+      });
+    }
+
+    // Function to handle item editing
+
+    // Get CSRF token from the cookie or your desired source
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(
+              cookie.substring(name.length + 1)
+            );
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    var csrftoken = getCookie("csrftoken");
+
+    function deleteItem(itemId) {
+      // Configure AJAX request
+      $.ajax({
+        url: `{{Backend_url}}/team-member/delete/${itemId}`,
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        success: function (response) {
+          fetchDataAgain();
+          // If deletion is successful, remove the item from the table
+          const tableRow = document.getElementById(itemId);
+          $(tableRow).remove();
+          Swal.fire("Deleted!", "Your item has been deleted.", "success");
+        },
+        error: function (xhr, status, error) {
+          console.error("Error deleting item:", error);
+          Swal.fire("Error!", "Failed to delete the item.", "error");
+        },
+      });
+    }
+
+    var companyId;
+    var companyNameVar;
+
+    // comapny post
+
+    $(document).ready(function () {
+      $("#submitcompany").click(function () {
+        if (!validateCompanyFormData()) {
+          return; // If validation fails, stop form submission
+        }
+
+        var formData = new FormData($("#companycratedata")[0]);
+
+
+        $.ajax({
+          url: "{{Backend_url}}/company-create/",
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: {
+            "X-CSRFToken": csrftoken,
+          },
+          success: function (response) {
+            companyId = response.id;
+            companyNameVar = response.company_name
+            localStorage.setItem('company_name', response.company_name);
+            localStorage.setItem('company_id', response.id);
+
+            submitmemberPost()
+            fetchDataAgain();
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Company Created successfully!",
+            })
+
+            // .then((result) => {
+            //   if (result.isConfirmed) {
+            //     window.location.href = `/detail/${response.company_name}/`;
+            //   }
+            // });
+            closeCreateCompanyModal();
+          },
+          error: function (error) {
+            var errorMessage = error.responseJSON
+              ? error.responseJSON.error_message
+              : "An error occurred while creating the company.";
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: errorMessage,
+            });
+            closeCreateCompanyModal();
+          },
+        });
+      });
+
+
+
+
+      function submitmemberPost() {
+        // Validate member creation form fields
+        if (!validateMemberFormData()) {
+          return; // If validation fails, stop form submission
+        }
+
+        var formData = new FormData($("#membercreatedata")[0]);
+        formData.append("company_id", companyId);
+
+        $.ajax({
+          url: "{{Backend_url}}/team_member_add/",
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: {
+            "X-CSRFToken": csrftoken,
+          },
+          success: function (response) {
+            fetchDataAgain();
+            // Swal.fire({
+            //   icon: "success",
+            //   title: "Success",
+            //   text: "Team member added successfully!",
+            // });
+            closeAddTeamMemberModal();
+          },
+          error: function (xhr, status, error) {
+            // Swal.fire({
+            //   icon: "error",
+            //   title: "Error",
+            //   text: "An error occurred while adding team member.",
+            // });
+            // closeAddTeamMemberModal();
+          },
+        });
+      }
+
+      // Function to validate company creation form fields
+      function validateCompanyFormData() {
+        // Perform validation logic here
+        // For example, check if required fields are not empty
+        var companyName = $("#title").val();
+        var companyDescription = $("#description").val();
+
+        if (
+          !companyName ||
+          !companyDescription
+        ) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Please fill in all required fields for company creation.",
+          });
+          return false;
+        }
+
+        return true;
+      }
+
+      function validateMemberFormData() {
+        var memberName = $("#name").val();
+        var memberEmail = $("#availability_start").val();
+        var Availability_end = $("#availability_end").val();
+
+        if (!memberName || !memberEmail || !Availability_end) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Please fill in all required fields for adding team member.",
+          });
+          return false;
+        }
+
+        return true;
+      }
+
+      // social media
+
+
+
+      $("#socialmediadatapostbtn").click(function () {
+
+        var formData = new FormData($("#socialmediadatapost")[0]);
+        if (companyId) {
+          formData.append("company_id", companyId);
+
+        } else {
+          var companyId_ = localStorage.getItem("company_id");
+          formData.append("company_id", companyId_);
+
+        }
+
+        $.ajax({
+          url: "{{Backend_url}}/social_media_post/",
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: {
+            "X-CSRFToken": csrftoken,
+          },
+          success: function (response) {
+            fetchDataAgain();
+            // Swal.fire({
+            //   icon: "success",
+            //   title: "Success",
+            //   text: "Company Created successfully!",
+            // })
+            if(companyNameVar){
+              window.location.href = `/detail/${companyNameVar}/`;
+
+            }else{
+          var companyId_name = localStorage.getItem("company_name");
+              window.location.href = `/detail/${companyId_name}/`;
+            }
+            // closeCreateCompanyModal();
+          },
+          error: function (error) {
+            var errorMessage = error.responseJSON
+              ? error.responseJSON.error_message
+              : "An error occurred while creating the company.";
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: errorMessage,
+            });
+            closeCreateCompanyModal();
+          },
+        });
+      });
+
+
+    });
+
+    var mytableid;
+
+    $(document).ready(function () {
+      fetchDataAgain();
+      fetchDataAndUpdateHTML();
+      fetchDatapersonaldevelopement()
+
+      // Open edit modal when edit button is clicked
+      $(document).on("click", ".editButton", function () {
+        var id = $(this).data("id");
+        mytableid = id;
+        openEditModal(id);
+      });
+
+      // Update team member data when save button is clicked
+      $("#EditmembersaveButton").click(function () {
+        updateTeamMember();
+      });
+    });
+
+
+    $(document).ready(function () {
+      // Initialize an array to store checkbox IDs
+      var selectedIds = [];
+
+      // Bind change event listener to checkboxes inside #strategyList
+      $('#strategyList').on('change', 'input[type="checkbox"]', function () {
+        var checkboxId = $(this).attr('id');
+
+        if ($(this).is(':checked')) {
+          selectedIds.push(checkboxId);
+        } else {
+          var index = selectedIds.indexOf(checkboxId);
+          if (index !== -1) {
+            selectedIds.splice(index, 1);
+          }
+        }
+
+        updatePrompts(selectedIds);
+      });
+
+      function updatePrompts(ids) {
+    // Show loader while waiting for response
+    $("#myLoader").show();
+
+    // Clear select boxes before updating with new options
+    $("#propertystrategies").empty();
+    // $("#uploadedcase").empty();
+
+    $.ajax({
+        url: '/generate-prompt/', 
+        type: 'POST',
+        contentType: 'application/json', 
+        data: JSON.stringify({ category_ids: ids }), 
+        headers: {
+            "X-CSRFToken": csrftoken,
+        },
+        success: function (response) {
+            // Hide loader after receiving response
+            $("#myLoader").hide();
+
+            // Update #propertystrategies select box
+            response.prompts.forEach(function (prompt, index) {
+                var option = $("<option>", {
+                    value: prompt.id,
+                    text: prompt.text,
+                });
+                $("#propertystrategies").append(option);
+            });
+
+            // Update #uploadedcase select box
+            // response.case_files.forEach(function (prompt, index) {
+            //     var option = $("<option>", {
+            //         value: prompt.files,
+            //         text: prompt.files,
+            //     });
+            //     $("#uploadedcase").append(option);
+            // });
+        },
+        error: function (xhr, status, error) {
+            // Hide loader in case of error
+            $("#myLoader").hide();
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+//  ---------------- file onchange function ------------------------------------- 
+
+      // Bind change event listener to checkboxes inside #strategyList
+      $('#Brochuremedia').on('change', function(event) {
+            var files = event.target.files
+            var formData = new FormData();
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append('media_file', files[i]);
+            }
+
+            // Show loader while waiting for response
+            // $("#myLoader").show();
+          $("#myLoaderCase").show();
+
+
+            $.ajax({
+                url: "{{Backend_url}}/media-prompt/",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    "X-CSRFToken": csrftoken, // Include CSRF token if needed
+                },
+                success: function(response) {
+                  console.log("response-------filess --------------",response)
+                    // Hide loader after receiving response
+
+                    $("#myLoaderCase").hide();
+
+                    // Update #propertystrategies select box
+                    // response.prompts.forEach(function(prompt) {
+                    //     var option = $("<option>", {
+                    //         value: prompt.id,
+                    //         text: prompt.text,
+                    //     });
+                    //     $("#propertystrategies").append(option);
+                    // });
+
+                    // Update #uploadedcase select box
+
+
+                    response.data.forEach(function(file) {
+                        var option = $("<option>", {
+                            value: file.id,
+                            text: file.text,
+                        });
+                        $("#uploadedcase").append(option);
+                    });
+
+
+                },
+                error: function(xhr, status, error) {
+                    // Hide loader in case of error
+
+                    $("#myLoaderCase").hide();
+
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+//  ---------------- file onchange function ------------------------------------- 
+
+
+    });
+
+
+
+    
+    function fetchDataAndUpdateHTML() {
+      $.ajax({
+        url: '{{Backend_url}}/category-list/',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          const strategyList = document.getElementById('strategyList');
+          // Clear previous content
+          strategyList.innerHTML = '';
+          // Iterate over fetched data and create list items dynamically
+          data.data.forEach(strategy => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('w-full', 'border-b', 'border-gray-200', 'rounded-t-lg', 'dark:border-gray-600');
+            listItem.innerHTML = `
+          <div class="flex items-center ps-3">
+            <input id="${strategy.id}" name="category" value="${strategy.id}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="${strategy.id}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">${strategy.name}</label>
+          </div>
+        `;
+            strategyList.appendChild(listItem);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    }
+
+    function fetchDatapersonaldevelopement() {
+      $.ajax({
+        url: '{{Backend_url}}/static-prompts/',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+         
+          var selectBox = $("#personaldevelopment");
+            selectBox.empty();
+
+            data.data.forEach(function (prompt, index) {
+              var option = $("<option>", {
+                value: prompt,
+                text: prompt,
+              });
+              selectBox.append(option);
+            });
+
+
+          // var selectBox = $("#personaldevelopment");
+          // selectBox.empty();
+
+          // // data?.data.forEach(function (prompt, index) {
+          // var option = $("<option>", {
+          //   value: data.data.personal_development,
+          //   text: data.data.personal_development,
+          // });
+          // selectBox.append(option);
+          // // });
+
+
+          var selectBox = $("#meetingsattended");
+          selectBox.empty();
+
+          // data?.data.forEach(function (prompt, index) {
+          var option = $("<option>", {
+            value: data.data.meeting_attended,
+            text: data.data.meeting_attended,
+          });
+          selectBox.append(option);
+          // });
+
+        },
+        error: function (xhr, status, error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    }
+
+
+    // Call the function initially to populate the HTML
+
+    function fetchDataAgain() {
+      $.ajax({
+        url: "{% url 'team_member_list' %}",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          var tableBody = $("#tableBody");
+          tableBody.empty();
+
+          $.each(data.team_members, function (index, item) {
+            var row = $("<tr></tr>");
+            row.append("<td>" + item.name + "</td>");
+            var formattedDate = moment(item.availability_start).format(
+              "DD MMMM YYYY HH:mm"
+            );
+            row.append("<td>" + formattedDate + "</td>");
+
+            var formattedDate = moment(item.availability_end).format(
+              "DD MMMM YYYY HH:mm"
+            );
+            row.append("<td>" + formattedDate + "</td>");
+
+            var editButton = $(
+              '<button class="editButton" data-id="' + item.id + '"></button>'
+            );
+            var editIcon = $(
+              '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-blue-500 cursor-pointer"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 4.586a2 2 0 0 1 2.828 2.828l-9.9 9.899a1 1 0 0 1-1.413 0L3.586 14.414a2 2 0 0 1 0-2.828L12.7 3.586a2 2 0 0 1 2.828 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6"/></svg>'
+            );
+            // editButton.append(editIcon);
+
+            var cell = $("<td></td>");
+            cell.append(editButton);
+
+            var deleteButton = $(
+              '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-500 cursor-pointer"><path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/></svg>'
+            );
+            deleteButton.click(function () {
+              confirmDelete(item.id);
+            });
+            cell.append(deleteButton);
+
+            row.append(cell);
+
+            row.append(cell);
+
+            tableBody.append(row);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error("Error fetching data:", error);
+        },
+      });
+    }
+
+    function openEditModal(id) {
+      var createCompanyModal = document.getElementById("editcompay");
+      if (createCompanyModal) {
+        createCompanyModal.style.display = "block";
+      }
+
+      $.ajax({
+        url: "/team_member_list/" + id,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          $("#name").val(data?.team_members?.name);
+          $("#availability_start").val(
+            data?.team_members?.availability_start
+          );
+          $("#editcompay").show(); // Show the modal
+        },
+        error: function (xhr, status, error) {
+          console.error("Error fetching team member data:", error);
+        },
+      });
+    }
+
+    function updateTeamMember() {
+      var name = $("#name").val();
+      var availability_start = $("#availability_start").val();
+
+      $.ajax({
+        url: "/team-member/edit/" + mytableid + "/",
+        type: "PUT",
+        contentType: "application/json",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        data: JSON.stringify({
+          name: name,
+          availability_start: availability_start,
+        }),
+        success: function (response) {
+          $("#editModal").hide(); // Hide the modal after successful update
+          fetchDataAgain(); // Refresh the data after update
+        },
+        error: function (xhr, status, error) {
+          console.error("Error updating team member data:", error);
+          Swal.fire({
+            icon: "error",
+            title: "error",
+            text: "something went wrong",
+          });
+        },
+      });
+    }
+
+    // ai
+
+    $(document).ready(function () {
+      $("#category").change(function () {
+        var categoryId = $(this).val();
+        $.ajax({
+          url: "{{Backend_url}}/generate-prompt/" + categoryId,
+          type: "GET",
+          success: function (response) {
+            var selectBox = $("#prompt");
+            selectBox.empty();
+
+            response.prompts.forEach(function (prompt, index) {
+              var option = $("<option>", {
+                value: prompt.id,
+                text: prompt.text,
+              });
+              selectBox.append(option);
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+          },
+        });
+      });
+    });
+    
+  </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Disable weekends (Saturday and Sunday)
+    document.getElementById('availability_start').addEventListener('input', disableWeekends);
+    document.getElementById('availability_end').addEventListener('input', disableWeekends);
+  });
+
+  function disableWeekends() {
+    var availability_start = new Date(document.getElementById('availability_start').value);
+    var availability_end = new Date(document.getElementById('availability_end').value);
+
+    if (availability_start && availability_end) {
+      // Loop through each date input and check if it's a weekend
+      [availability_start, availability_end].forEach(function(date) {
+        var day = date.getDay(); // Get day of the week (0=Sunday, 1=Monday, etc.)
+        if (day === 0 || day === 6) {
+          // If it's Saturday or Sunday, show alert and reset input value
+          alert('You cannot select weekends.');
+          document.getElementById('availability_start').value = '';
+          document.getElementById('availability_end').value = '';
+        }
+      });
+    }
+  }
+</script>
+
+  <div>
+    <div id="createCompanyModal" class="modal">
+      <div class="modal-content">
+        <div class="add-comp border-b border-gray-100 mb-4">
+          <h2 class="font-semibold text-gray-800 text-2xl"> Train AI Model</h2>
+          <span onclick="closeCreateCompanyModal()" class="close">&times;</span>
+        </div>
+        <div>
+          <form id="socialmediadatapost">
+            <div class="form-group">
+              <label class="form-title" for="aboutcompany">Business Facts</label>
+              <textarea class="form-control input-field" id="businessfacts" name="businessfacts" rows="4"
+                required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-title" for="Brochuremedia">Case Studies</label>
+              <input type="file" class="form-control input-field-file" id="Brochuremedia" name="Brochuremedia"
+                multiple />
+            </div>
+            <div class="form-group">
+              <label class="form-title" for="Brochuremedia_">Property Strategies (Choose relevant to your
+                business)</label>
+              <ul class="flex items-center text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg"
+                id="strategyList">
+                <!-- Dynamic content will be populated here -->
+              </ul>
+            </div>
+            <div class="my-4">
+              <h2 class="font-semibold text-gray-800 text-2xl">Prompts</h2>
+            </div>
+            <div class="form-group propertystrategies">
+              <label class="form-title" for="propertystrategies">Property Strategies related knowledge based
+                prompts</label>
+              <div>
+                <select multiple size="5" class="formbold-form-input" id="propertystrategies"
+                  name="propertystrategies"></select>
+
+                  <div id="myLoader" class="loader"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-title" for="uploadedcase">Case Studies related prompt</label>
+              <div>
+                <select multiple size="5" class="formbold-form-input" id="uploadedcase" name="uploadedcase"></select>
+                <div id="myLoaderCase" class="loaderCase"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-title" for="personaldevelopment">Other prompts</label>
+              <div>
+                <select multiple size="5" class="formbold-form-input" id="personaldevelopment"
+                  name="personaldevelopment"></select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="flex items-center gap-4">
+          <button type="button" class="action-btnshow" id="socialmediadatapostbtn">
+            Submit
+          </button>
+          <button onclick="closeCreateCompanyModal()" type="button" class="action-btnshow cancel-btn">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    <section class="antialiased text-gray-600 px-4">
+      <div class="my-12">
+        <div class="maindiv-show">
+          <div class="add-comp border-b border-gray-100">
+            <h2 class="font-semibold text-gray-800 text-2xl">Create Business Profile</h2>
+            <button class="action-btnshow" onclick="openCreateCompanyModal()">Train AI</button>
+          </div>
+          <div>
+            <form id="companycratedata">
+              <div class="form-group">
+                <label class="form-title" for="title">Title</label>
+                <input type="text" class="form-control input-field" id="title" name="title" required />
+              </div>
+              <div class="form-group">
+                <label class="form-title" for="description">Description</label>
+                <textarea class="form-control input-field" id="description" name="description" rows="4"
+                  required></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <!-- <div class="form-group">
+                    <label class="form-title" for="category">Category</label>
+
+                    <select
+                      class="form-control input-field"
+                      id="category"
+                      name="category_id"
+                      required
+                    >
+                      <option selected disabled>
+                        Select category
+                      </option>
+                      {% for category in categories %}
+                      <option value="{{ category.id }}">
+                        {{ category.name }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>  -->
+                <div class="form-group">
+                  <label class="form-title" for="video">Media</label>
+                  <input type="file" class="form-control input-field-file" id="video" name="media" />
+                </div>
+              </div>
+            </form>
+
+            <form id="membercreatedata">
+              <div class="form-group">
+                <label class="form-title" for="name">Capacity</label>
+                <input type="text" class="form-control input-field" id="name" name="name" required />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="form-group">
+                  <label class="form-title" for="availability_start">Start Date</label>
+                  <!-- <input type="datetime-local" class="form-control input-field" id="availability_start"
+                    name="availability_start" /> -->
+                    <input type="datetime-local" class="form-control input-field" id="availability_start" name="availability_start" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-title" for="availability_end">End Date</label>
+                  <!-- <input type="datetime-local" class="form-control input-field" id="availability_end"
+                    name="availability_end" /> -->
+                  <input type="datetime-local" class="form-control input-field" id="availability_end" name="availability_end" required>
+                </div>
+              </div>
+            </form>
+            <div class="flex items-center gap-4">
+              <button type="button" class="action-btnshow" id="submitcompany">
+                Create Company
+              </button>
+              <button type="button" class="action-btnshow cancel-btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+{% endblock %}

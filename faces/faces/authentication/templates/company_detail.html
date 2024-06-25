@@ -1,0 +1,626 @@
+{% extends "base.html" %} {% load static %} {% block css %} {% endblock %} {% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <style>
+
+    /* Add this CSS to your stylesheet */
+    span.flatpickr-day.flatpickr-disabled {
+    background: #ff000030 !important;
+    color: black;
+}
+
+    select#event-time {
+      width: 100%;
+      padding: 8px 11px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    span.close {
+      font-size: 35px;
+    }
+
+    .mainslot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 8% auto;
+      padding: 30px 25px;
+      border: 1px solid #888;
+      width: 40%;
+      border-radius: 5px;
+    }
+
+    .media-section {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .company-desc p {
+      font-family: poppins;
+      font-size: 16px;
+    }
+
+    .act-btnshow {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .media-section img {
+      width: 700px;
+      height: 300px;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif !important;
+    }
+
+    .maiheading h1 {
+      text-align: center;
+      font-size: 34px;
+      font-family: "Poppins", sans-serif !important;
+    }
+
+    .maiheading {
+      margin-top: 40px;
+    }
+
+    .container-show {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .main-slotdiv {
+    display: flex;
+    justify-content: space-around;
+    border: 2px solid #174c6e;
+    padding: 40px 40px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+    button.action-btnshow {
+      background: #174c6e;
+      color: white;
+      padding: 10px 19px;
+      border-radius: 9px;
+      outline: none;
+      width: 150px;
+    }
+
+    h2.book-nowth {
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.bookslot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+button.close {
+    font-size: 33px;
+    height: auto;
+}
+
+button.close-btn {
+    border: 1px solid #174c6e;
+    padding: 8px 42px;
+    border-radius: 8px;
+    color: #174c6e;
+}
+
+select#start_end_time {
+    width: 300px;
+    border-radius: 5px;
+    padding: 9px 10px;
+}
+
+p.slotheading {
+    font-weight: 600;
+    margin-right: 12px;
+    margin-bottom: 10px;
+}
+
+i.fa.fa-hand-o-right {
+    margin-left: 13px;
+    font-size: 20px;
+    color: black;
+}
+
+p.slotheading {
+    font-weight: 600;
+    margin-right: 12px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    font-family: 'Poppins';
+}
+
+.bookslot {
+    border-bottom: 2px solid #174c6e;
+}
+
+p#companyDescription {
+    font-size: 15px;
+    text-transform: capitalize;
+    font-family: 'Poppins';
+}
+  </style>
+
+
+
+<div class="preloder_loader_spinner" style="display: none;">
+  <div class="loder_loader_spinner">
+    
+  </div>
+</div>
+
+  <div class="container-show">
+    <div class="pb-12 font-sans bg-white flex flex-col w-full">
+      <div class="maiheading">
+        <h1 id="companyName"></h1>
+      </div>
+      <div class="media-section">
+        <img id="companyMedia" src="" />
+      </div>
+
+
+      <div class="company-desc">
+        <div class="maiheading">
+          <h1>Our Service</h1>
+        </div>
+
+        <p id="companyDescription_"></p>
+      </div>
+
+      <section class="">
+        <div class="main-slotdiv">
+          <div
+            class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                Book Now
+              </h1>
+              <form class="space-y-4 md:space-y-6" action="#">
+                <div>
+                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                  <input type="name" id="slotname"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Name" />
+                </div>
+
+                <div>
+                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                  <input id="slotemail" type="email"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Email" />
+                </div>
+
+                <div>
+                  <label for="mobile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mobile
+                  </label>
+                  <input id="slotmobile" type="mobile"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Mobile" />
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="datepickershow">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-8">
+              Pick Slot
+            </h1>
+            <input hidden type="text" id="datepicker" placeholder="Select date.." />
+
+            <button type="button" class="action-btnshow mt-8" id="submitdata">
+              Submit
+            </button>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                 
+                  <div class="bookslot">
+                    <h2 class="book-nowth">Book Now</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+
+                  <div class="modal-body mb-6">
+                    <div class="flex pb-1">
+                      <p class="slotheading">Capacity<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="eventname"></p>
+                    </div>
+                    <div class="flex pb-2">
+                      <p class="slotheading">Description<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="companyDescription"></p>
+                    </div>
+                    <div class="flex pb-2">
+                      <p class="slotheading">availability start date<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="availability_start_date"></p>
+                    </div>
+                    <div class="flex pb-2">
+                      <p class="slotheading">availability end date<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="availability_end_date"></p>
+                    </div>
+                    <div class="flex pb-2">
+                      <p class="slotheading">availability start time<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="availability_start_time"></p>
+                    </div>
+                    <div class="flex pb-2">
+                      <p class="slotheading">availability end time<i class="fa fa-hand-o-right"></i>
+ </p>
+                      <p id="availability_end_time"></p>
+                    </div>
+                    <div class="pb-2">
+                      <p class="slotheading">Start Time
+ </p>
+                      <select id="start_end_time"></select>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="action-btnshow" id="submitdata">
+                      Done
+                    </button>
+
+
+                    <button type="button" class="close-btn" data-dismiss="modal">Close</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+          </div>
+
+      </section>
+    </div>
+  </div>
+
+</body>
+
+<script>
+  let start_date_variable;
+  let end_date_variable;
+  let capacity_varibale;
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      var cookies = document.cookie.split(";");
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(
+            cookie.substring(name.length + 1)
+          );
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  var csrftoken = getCookie("csrftoken");
+
+  function fetchDataAgain() {
+
+    $('.preloder_loader_spinner').show();
+
+
+    var companyname = localStorage.getItem('company_name');
+    $.ajax({
+      url: `{{Backend_url}}/company_all_details/${companyname}/`,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+
+
+        $('.preloder_loader_spinner').hide();
+
+        console.log("data---data ----data -------------", data)
+        $("#companyName").html("Welcome to" + " " + data.company.name);
+        $("#companyDescription").html(data.company.description);
+        $("#companyDescription_").html(data.company.description);
+        $("#companyMedia").attr("src", data.company.media);
+
+        $("#eventname").html(data.team_member.name);
+        $("#availability_start_date").html(data.team_member.availability_start_date);
+        $("#availability_end_date").html(data.team_member.availability_end_date);
+
+        $("#availability_start_date_hide").html(data.team_member.availability_start_date)
+        $("#availability_end_date_hide").html(data.team_member.availability_end_date)
+
+        start_date_variable = data.team_member.availability_start_date
+        end_date_variable = data.team_member.availability_end_date
+        capacity_varibale = data.team_member.name
+        $("#availability_start_time").html(data.team_member.availability_start_time);
+        $("#availability_end_time").html(data.team_member.availability_end_time);
+
+
+
+        // function intervals(start, end) {
+        //   var start = moment(start, 'hh:mm a').add(1, 'h');
+        //   var end = moment(end, 'hh:mm a').subtract(1, 'h');
+        //   if (end < start)
+        //     end = end.add(1, 'd');
+        //   var result = [];
+        //   var current = moment(start);
+        //   while (current <= end) {
+        //     result.push(current.format('hh:mm a'));
+        //     current.add(1, 'hours');
+        //   }
+        //   return result;
+        // }
+
+
+        function intervals() {
+  var start = moment('09:00 am', 'hh:mm a');
+  var end = moment('05:30 pm', 'hh:mm a');
+  var result = [];
+
+  while (start <= end) {
+    result.push(start.format('hh:mm a'));
+    start.add(30, 'minutes'); // Add half-hour increments
+    if (start.minutes() === 0) {
+      start.add(30, 'minutes'); // Skip if it's an hour mark
+    }
+  }
+
+  return result;
+}
+
+
+
+
+        var startTime = data.team_member.availability_start_time;
+        var endTime = data.team_member.availability_end_time;
+
+        var daySelect = intervals(startTime, endTime);
+
+        if (typeof daySelect === 'object') {
+          daySelect = daySelect.toString();
+        }
+
+
+
+        var intervalsArray = daySelect.split(',');
+
+        var selectBox = document.getElementById("start_end_time");
+        selectBox.innerHTML = "";
+
+        intervalsArray.forEach(function (interval) {
+          var option = document.createElement("option");
+          option.text = interval;
+          option.value = interval;
+          selectBox.add(option);
+        });
+
+        selectBox.style.display = "block";
+
+
+
+        $("#start_end_time").change(function () {
+          var selectedStartTime = $(this).val();
+          var startIndex = intervalsArray.indexOf(selectedStartTime);
+          // var endSelectBox = document.getElementById("end_end_time");
+          endSelectBox.innerHTML = "";
+
+          for (var i = startIndex + 1; i < intervalsArray.length; i++) {
+            var option = document.createElement("option");
+            option.text = intervalsArray[i];
+            option.value = intervalsArray[i];
+            endSelectBox.add(option);
+          }
+
+          endSelectBox.style.display = "block";
+        });
+
+        var availabilityStartDate = new Date(data.team_member.availability_start_date);
+
+        flatpickr("#datepicker", {
+          dateFormat: "Y-m-d",
+          inline: true,
+          disable: [
+          function(date) {
+            return (date.getDay() === 6 || date.getDay() === 0);
+          }
+        ],
+          onChange: function (selectedDates, dateStr, instance) {
+      
+            if (selectedDates.length > 0) {
+              var selectedDate = selectedDates[0];
+              if (selectedDate.getFullYear() === availabilityStartDate.getFullYear() &&
+                selectedDate.getMonth() === availabilityStartDate.getMonth() &&
+                selectedDate.getDate() === availabilityStartDate.getDate()) {
+                $('#myModal').modal('show');
+              } else {
+                Swal.fire({
+                icon: "error",
+                title: "Opps!",
+                text: "This Date is empty. Please Select Valid Date.",
+              });
+                }
+            }
+          },
+          onReady: function (selectedDates, dateStr, instance) {
+            markAvailabilityStartDate(availabilityStartDate, instance);
+          },
+          onMonthChange: function (selectedDates, dateStr, instance) {
+            markAvailabilityStartDate(availabilityStartDate, instance);
+          },
+          onYearChange: function (selectedDates, dateStr, instance) {
+            markAvailabilityStartDate(availabilityStartDate, instance);
+          }
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching data:", error);
+        $('.preloder_loader_spinner').hide();
+
+      },
+    });
+  }
+
+  function markAvailabilityStartDate(availabilityStartDate, instance) {
+    var calendarDays = instance.days.childNodes;
+    var year = instance.currentYear;
+    var month = instance.currentMonth;
+    var day = availabilityStartDate.getDate();
+    if (year === availabilityStartDate.getFullYear() && month === availabilityStartDate.getMonth()) {
+      for (var i = 0; i < calendarDays.length; i++) {
+        if (parseInt(calendarDays[i].textContent) === day) {
+          calendarDays[i].style.backgroundColor = "#174c6e";
+          calendarDays[i].style.color = "white";
+
+          break;
+        }
+      }
+    }
+  }
+
+  $(document).ready(function () {
+    fetchDataAgain(); // Fetch data when the document is ready
+  });
+
+
+  $(document).ready(function () {
+
+    function validateCompanyFormData() {
+      // Perform validation logic here
+      // For example, check if required fields are not empty
+      var slotnameVal = $("#slotname").val();
+      var slotemailVal = $("#slotemail").val();
+      var slotemobile = $("#slotmobile").val()
+      var startTimeVal = $("#start_end_time").val()
+      // var endTimeVal = $("#end_end_time").val()
+      console.log("slotnameVal------", slotnameVal)
+      console.log("slotemailVal------", slotemailVal)
+
+
+
+      if (
+        !slotnameVal ||
+        !slotemailVal || !slotemobile
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Please fill in all required fields for the booking.",
+        });
+        return false;
+      } else if (!startTimeVal) {
+        $('#myModal').modal('show');
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Please fill start time and end time.",
+        });
+        return false;
+      }
+
+      return true;
+    }
+
+    $("#submitdata").click(function () {
+      if (!validateCompanyFormData()) {
+        return; // If validation fails, stop form submission
+      }
+
+      var formData = new FormData();
+      // formData.append("start_end_time", $("#start_end_time").val());
+      formData.append("start_time", $("#start_end_time").val());
+      // formData.append("end_time", $("#end_end_time").val());
+      formData.append("availability_start_date", start_date_variable);
+      formData.append("availability_end_date", end_date_variable);
+      formData.append("capacity", capacity_varibale);
+      formData.append("slotname", $("#slotname").val());
+      formData.append("slotemail", $("#slotemail").val());
+      formData.append("slotmobile", $("#slotmobile").val());
+
+      $.ajax({
+        url: "{{Backend_url}}/book-slot/",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        success: function (response) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Slot booked successfully",
+          });
+        },
+        error: function (error) {
+
+        },
+      });
+    });
+
+
+
+
+  });
+
+</script>
+
+</html>
+
+{% endblock %}

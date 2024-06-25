@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Check Voucher Code{% endblock title %}
+
+{% block content %}
+
+<style>
+
+.main-voucher-div {
+    width: 600px;
+    margin: 0 auto;
+    background: aqua;
+}
+
+.main-voucher-div {
+    width: 600px;
+    margin: 0 auto;
+    background: #174c6e;
+    padding: 25px 27px;
+    border-radius: 8px;
+}
+
+h1.voucher-heading {
+    font-size: 22px;
+    text-align: center;
+    color: white;
+}
+
+h3.voucher_code-label {
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+input#voucher_code {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 5px;
+}
+
+
+button.cehck-btn {
+    background:rgb(4, 102, 128);
+    margin-top: 14px;
+    width: 130px;
+    padding: 8px 2px;
+    font-size: 18px;
+    color: white;
+    border-radius: 8px;
+}
+
+div#message {
+    font-size: 16px;
+    color: #bc1515;
+    font-weight: 500;
+}
+
+.my-12 {
+    margin: 110px 0px;
+}
+
+</style>
+
+<div class="my-12">
+<div class="main-voucher-div">
+<h1 class="voucher-heading">Check Voucher Code</h1>
+<form onsubmit="event.preventDefault(); checkVoucherCode();">
+    {% csrf_token %}
+    <div>
+    <h3 class="voucher_code-label">Enter Voucher Code:</h3>
+    <input class="voucher-codeshow" type="text" id="voucher_code" name="voucher_code" required>
+<div id="message"></div>
+
+</div>
+    <button class="cehck-btn" type="submit">Check</button>
+</form>
+</div>
+</div>
+<script>
+    function checkVoucherCode() {
+        const code = document.getElementById('voucher_code').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch('/check-voucher/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: new URLSearchParams({
+                'code': code
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/company-create/';
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            const messageBox = document.getElementById('message');
+            if (data.success) {
+                messageBox.innerHTML = `<span style="color: green;">${data.message}</span>`;
+            } else {
+                messageBox.innerHTML = `<span style="color: red;">${data.message}</span>`;
+            }
+        });
+    }
+</script>
+{% endblock content %}

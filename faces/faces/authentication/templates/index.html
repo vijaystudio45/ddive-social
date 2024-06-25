@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% block css %}
+<style>
+  /* Popup container - can be anything you want */
+  .popup {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    padding-top: 60px;
+  }
+
+  /* Popup Content/Box */
+  .popup-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 530px !important;
+    position: relative;
+}
+
+  /* Close button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: -6px;
+    right: 6px;
+ 
+}
+.Generatepopup {
+  width: 430px !important;
+}
+.Previewpopup .full-input label {
+  width: 200px !important;
+  float: left;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #000;
+  font-weight: 600;
+}
+.Previewpopup .full-input {
+  margin-bottom: 25px;
+}
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .full-input label {
+    width: 100px !important;
+    float: left;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #000;
+    font-weight: 600;
+}
+.Submitbtn {
+  width: 114px !important;
+  margin: 15px 0;
+}
+.full-input input {
+  width: 280px;
+  font-size: 14px;
+  border: 1px solid #dddd;
+}
+.full-input textarea {
+  width: 280px;
+  height: 90px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+.full-input img {
+  min-width: 200px !important;
+  max-width: 200px !important;
+  width: 100%;
+}
+.full-input:nth-child(5) {
+  opacity: 0;
+}
+
+.Previewpopup .submit-post-to-channel {
+  width: 150px;
+}
+  /* Responsive styles for mobile */
+  @media only screen and (min-width: 320px) and (max-width: 767px) {
+    h2.Socialtitle {
+      font-size: 24px !important;
+      margin: 0 0 28px !important;
+    }
+
+    .Socialtitle1 {
+      font-size: 24px !important;
+    }
+  }
+
+  .login-btn22 {
+    background-color: #898989 !important;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    width: 60%;
+    margin-bottom: 2.5rem;
+    border-radius: 6px;
+    height: 44px;
+    border: none;
+  }
+
+  h2.popup-title {
+    color: #898989;
+    font-size: 25px;
+    font-weight: bold;
+    padding-bottom: 20px;
+    float: left;
+  }
+
+  .full-input {
+    float: left;
+    width: 100%;
+  }
+
+  .home-page-section-view-logo-content,
+  .home-page-section-view-logo {
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+<script>
+  var defaultThemeMode = "light";
+  var themeMode;
+  if (document.documentElement) {
+    if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+      themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+    } else {
+      if (localStorage.getItem("data-bs-theme") !== null) {
+        themeMode = localStorage.getItem("data-bs-theme");
+      } else {
+        themeMode = defaultThemeMode;
+      }
+    }
+    if (themeMode === "system") {
+      themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    document.documentElement.setAttribute("data-bs-theme", themeMode);
+  }
+
+  // Open the popup
+  function openPopup() {
+    document.getElementById("popup").style.display = "block";
+  }
+
+  // Close the popup
+  function closePopup() {
+    document.getElementById("popup").style.display = "none";
+  }
+
+  // Open the preview popup with form fields and submit button
+  function openPreviewPopup(data) {
+    // Construct HTML for displaying form fields
+    let popupContent = `
+    <div class="popup-content Previewpopup">
+      <h2 class="popup-title">Preview Post</h2>
+      <span class="close" onclick="closePreviewPopup()">&times;</span>
+      <form id="previewForm">
+  `;
+
+    // Iterate through each field in the data object and create form inputs
+    for (const [key, value] of Object.entries(data)) {
+      // Skip specific fields or check if they are null/undefined
+      if (value !== null && value !== undefined) {
+        // Handle generated_fb_post separately to ensure it's added once
+        if (key === 'generated_fb_post') {
+          popupContent += `
+          <div class="full-input">
+            <label for="${key}">Generated Facebook Post:</label>
+            <textarea id="${key}" name="${key}" readonly>${value}</textarea>
+          </div>
+        `;
+        } else {
+         // popupContent += `
+         // <div class="full-input">
+          //  <label for="${key}">${key.replace(/_/g, ' ').toUpperCase()}:</label>
+          //  <input type="text" id="${key}" name="${key}" value="${value}" readonly>
+        //  </div>
+       // `;
+
+            popupContent += `
+      <div class="full-input">
+        <label for="${key}">${key.replace(/_/g, ' ').toUpperCase()}:</label>
+        ${key.includes('image') ? `<img src="${value}" alt="${key}" style="max-width: 100%; height: auto;">` : `<input type="text" id="${key}" name="${key}" value="${value}" readonly>`}
+      </div>
+      `;
+        }
+      }
+    }
+
+    popupContent += `
+        <button type="submit" class="login-btn22 submit-post-to-channel " data-post-id="${data.post_id}">Submit Post</button>
+      </form>
+    </div>
+  `;
+
+    // Set the preview popup HTML
+    document.getElementById("previewPopup").innerHTML = popupContent;
+    document.getElementById("previewPopup").style.display = "block";
+
+    // Handle form submission from preview popup
+    document.querySelector(".submit-post-to-channel").addEventListener("click", function (event) {
+      event.preventDefault();
+      // Call the function to submit the form via AJAX
+      submitPreviewPost();
+    });
+  }
+
+  // Close the preview popup
+  function closePreviewPopup() {
+    document.getElementById("previewPopup").style.display = "none";
+  }
+
+  // AJAX form submission
+  function submitForm(event) {
+    event.preventDefault();
+    var formData = new FormData(document.getElementById("popupForm"));
+
+    fetch("https://ddivesocial.com/facesapi/", {
+      method: "POST",
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Success:", data);
+        closePopup(); // Close the generate post popup
+        openPreviewPopup(data); // Open preview popup with generated post data
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }
+
+  // Function to submit the preview post form via AJAX
+  function submitPreviewPost() {
+    var formData = new FormData(document.getElementById("previewForm"));
+    var postId = document.querySelector(".submit-post-to-channel").getAttribute("data-post-id");
+
+    fetch(`https://ddivesocial.com/faces-post/${postId}/`, {
+      method: "POST",
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Preview Post Submitted:", data);
+        closePreviewPopup(); // Close the preview popup
+        // Optionally, handle success feedback
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+        // Optionally, handle error feedback
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector(".generate_post").addEventListener("click", openPopup);
+    document.querySelector(".close").addEventListener("click", closePopup);
+    document.getElementById("popupForm").addEventListener("submit", submitForm);
+  });
+</script>
+
+<!-- Preview Popup -->
+<div id="previewPopup" class="popup"></div>
+
+<div class="py-20 main-home-content">
+  <div class="container mx-auto px-6 w-full flex">
+    <div class="w-1/2 home-page-section-view-logo-content">
+      <form action="https://ddivesocial.com/" method="GET">
+        <input type="hidden" name="first_name" value="{{ first_name }}" />
+        <input type="hidden" name="last_name" value="{{ last_name }}" />
+        <input type="hidden" name="username" value="{{ username }}" />
+        <input type="hidden" name="email" value="{{ email }}" />
+        <input type="hidden" name="partner_id" value="{{ partner_id }}" />
+        <button type="submit" class="login-btn22 read-more-btn-section font-medium">Connect with dDive Social</button>
+      </form>
+    </div>
+    <div class="home-page-section-view-logo w-1/2">
+      <button type="button" class="login-btn22 read-more-btn-section font-medium generate_post">Generate Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Form -->
+<div id="popup" class="popup ">
+  <div class="popup-content Generatepopup">
+    <h2 class="popup-title"> Generate Post</h2>
+    <span class="close">&times;</span>
+    <form id="popupForm" action="https://ddivesocial.com/" method="POST" enctype="multipart/form-data">
+      <div class="full-input">
+        <label for="prompt_text">Prompt Text:</label>
+        <input type="text" id="prompt_text" name="prompt_text" required><br><br>
+      </div>
+      <div class="full-input">
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image"><br><br>
+      </div>
+      <!--label for="email">Email:</label-->
+      <input type="email" style="display:none;" id="email" name="email" required value="{{ email }}"><br><br>
+      <button type="submit" class="login-btn22 Submitbtn">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

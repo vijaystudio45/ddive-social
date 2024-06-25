@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block css %} {% endblock %}
+  <title>Faces</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static '/assets/css/style.css' %}" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+  <link rel="dns-prefetch" href="//unpkg.com" />
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+</head>
+
+<body class="text-gray-700 bg-white" style="font-family: 'Source Sans Pro', sans-serif">
+  <style>
+    @media only screen and (min-width: 320px) and (max-width: 767px) {
+      .foterbuttom {
+        display: block !important;
+      }
+
+      ul.homemenu li {
+        margin: 0 0 7px;
+      }
+
+      .footer-div-border {
+        text-align: center !important;
+      }
+
+      button#dropdownNavbarLink:hover {
+        color: #fff !important;
+      }
+
+      button#dropdownNavbarcompanyLink:hover {
+        color: #fff !important;
+      }
+
+      .copyrigth {
+        text-align: center !important;
+      }
+
+      .sociliconfoter {
+        justify-content: center !important;
+      }
+
+      .sociliconfoter i {
+        color: #fff !important;
+      }
+
+      .img-logo-social-icons {
+        width: 220px !important;
+      }
+    }
+
+    @media only screen and (min-width: 767px) and (max-width: 1024px) {
+      .menudiv {
+        margin: 0 auto !important;
+      }
+
+      .logo {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+      }
+    }
+
+    a.footer-content-social {
+      color: #fff;
+      margin-right: 10px;
+      font-size: 16px;
+
+    }
+
+    .sociliconfoter {
+      display: flex;
+      align-items: center;
+      margin: 6px 0 0;
+    }
+
+    #socialLink_ {
+      position: absolute;
+      left: -81px !important;
+      top: -149px !important;
+      margin: 0px;
+      transform: translate(-45px, 126px) !important;
+      width: 125px !important;
+    }
+
+    .main-home-content {
+      height: 64vh;
+    }
+
+    .footer-div-border,
+    .foterbuttom {
+      color: #fff;
+    }
+  </style>
+  <nav class="bg-[#898989]  dark:bg-gray-900 haedertop">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div class="logo">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <!-- <img src="{% static 'assets/media/images/logo-social-pro.png' %} " class="img-logo-social-icons" alt="..." /> -->
+          <h1 class=" Socialtitle text-6xl font-bold" style="color: #fff">Faces</h1>
+        </a>
+      </div>
+      <button data-collapse-toggle="navbar-dropdown" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500  md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-dropdown" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+      <div class="hidden w-full md:block md:w-auto menudiv" id="navbar-dropdown">
+        <ul
+          class="homemenu flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-[#898989] dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          {% if request.user.is_authenticated %}
+          <li>
+            <a href="/logout"
+              class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Logout</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="/login"
+              class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %} {% endblock %}
+
+  <footer class="" style="background: #898989">
+    <div class="container mx-auto px-6 pt-10 pb-6">
+      <div class="footer-div-border">
+        <a href="/">
+          <!-- <img src="{% static 'assets/media/images/footer-new-logo.png' %} " class="img-logo-social-icons-footer"
+            alt="..." /> -->
+          <h3>Faces</h3>
+        </a>
+      </div>
+      <div class="flex justify-between foterbuttom">
+        <div class="copyrigth">
+          <h1 class="footer-content-social"> © 2024 Faces. All rights reserved.</h1>
+        </div>
+        <div class="sociliconfoter">
+          <a class="footer-content-social" href="{% url 'privacy_policy' %}">Privacy Policy</a>
+          <i class="fa fa-twitter social-media-icons-show"></i>
+          <i class="fa fa-instagram social-media-icons-show"></i>
+          <i class="fa fa-linkedin social-media-icons-show"></i>
+          <i class="fa fa-facebook-f social-media-icons-show"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    function toggleNav() {
+      var nav = document.getElementById("nav-links");
+      if (nav.style.display === "block") {
+        nav.style.display = "none";
+      } else {
+        nav.style.display = "block";
+      }
+    }
+
+    function togglePostsOpenBtn() {
+      var nav = document.getElementById("openList");
+      if (nav.style.display === "block") {
+        nav.style.display = "none";
+      } else {
+        nav.style.display = "block";
+      }
+
+      var navLinks = document.getElementById("LinksList");
+      if (navLinks.style.display === "block") {
+        nav.style.display = "none";
+      }
+    }
+
+    function toggleLinksOpenBtn() {
+      var navPost = document.getElementById("openList");
+      if (navPost.style.display === "block") {
+        nav.style.display = "none";
+      }
+      var nav = document.getElementById("LinksList");
+      if (nav.style.display === "block") {
+        nav.style.display = "none";
+      } else {
+        nav.style.display = "block";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    });
+
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+</body>
+
+</html>

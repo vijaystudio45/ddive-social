@@ -1,0 +1,115 @@
+{% extends "base.html" %} {% load static %} {% block content %} {% block css %}
+{% endblock %}
+<!-- Your custom CSS -->
+<style>
+  /* Style the table headers */
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+  }
+
+  /* Style the table rows */
+  td {
+    padding: 10px;
+  }
+
+  /* Style the alternate table rows */
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  .newsdlfjlsdfjdsjf {
+    width: 100%;
+    /* height: 100vh; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0;
+}
+</style>
+<div style="background: #dbe0e2">
+  <div class="container">
+    <div class="newsdlfjlsdfjdsjf">
+        <div class="" style="
+        width: 100%;
+    ">
+        <div class="card mb-3">
+          <div class="row g-0 main-card-sections">
+            <div class="col-md-12">
+              <div class="show-input-sections_">
+                <div class="create-post-heading">
+                  <p>Posts List</p>
+                </div>
+                <div class="w-full max-w-full">
+                  <div
+                    class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-soft-xl"
+                  >
+                    <div class="table-responsive">
+                      <table id="example" class="display" style="width: 100%">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Post Date</th>
+                            <th>Image</th>
+                            <th>Channels</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for i in item %}
+                          <tr>
+                            <td>{{ i.title }}</td>
+                            <td>{{ i.post_date }}</td>
+                            <td>
+                              <div class="mb-1">
+                                <img
+                                  width="80px"
+                                  src="{{ i.image.url }}"
+                                  alt="{{ i.title }}"
+                                />
+                              </div>
+                            </td>
+                            <td>{{ i.option }}</td>
+                            <td>{{ i.description }}</td>
+                            <td>
+                              <a class="mr-2" href="{% url 'update_item' i.pk %}">Edit</a>
+                              <a href="{% url 'delete_item' i.pk %}">Delete</a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                        <!-- <tfoot>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Post Date</th>
+                                        <th>Image</th>
+                                        <th>Option</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </tfoot> -->
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<!-- Initialize DataTables -->
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+</script>
+
+{% endblock %}

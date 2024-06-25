@@ -1,0 +1,16 @@
+
+{% block content %}
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+
+  <p><strong>-- OR --</strong></p>
+  <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+  <a href="{% url 'social:begin' 'linkedin-oauth2' %}">Login With Linkedin</a>
+
+  
+
+{% endblock %}

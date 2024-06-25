@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% load static %} {% block content %} {% block css %}
+{% endblock %}
+
+<script>
+  var defaultThemeMode = "light";
+  var themeMode;
+  if (document.documentElement) {
+    if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+      themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+    } else {
+      if (localStorage.getItem("data-bs-theme") !== null) {
+        themeMode = localStorage.getItem("data-bs-theme");
+      } else {
+        themeMode = defaultThemeMode;
+      }
+    }
+    if (themeMode === "system") {
+      themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    document.documentElement.setAttribute("data-bs-theme", themeMode);
+  }
+</script>
+<style>
+  @media only screen and (min-width: 320px) and (max-width: 767px) {
+    h2.Socialtitle {
+      font-size: 24px !important;
+      margin: 0 0 28px !important;
+    }
+
+    .Socialtitle1 {
+      font-size: 24px !important;
+    }
+  }
+
+  .login-btn22 {
+    background-color: #ff7900 !important;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    width: 60%;
+    margin-bottom: 2.5rem;
+    border-radius: 6px;
+    height: 44px;
+    border: none;
+  }
+</style>
+
+<div class="py-20 main-home-content">
+  <div class="container mx-auto px-6 w-full flex">
+    <div class="w-1/2 home-page-section-view-logo-content">
+      <form action="http://51.20.176.13:8000/" method="GET">
+        <input type="hidden" name="first_name" value="{{ first_name }}" />
+        <input type="hidden" name="last_name" value="{{ last_name }}" />
+        <input type="hidden" name="username" value="{{ username }}" />
+        <input type="hidden" name="email" value="{{ email }}" />
+        <input type="hidden" name="partner_id" value="{{ partner_id }}" />
+        <button type="submit" class="login-btn22 read-more-btn-section font-medium"> Connect with dDive Social </button>
+      </form>
+    </div>
+    <div class="home-page-section-view-logo w-1/2">
+      <form action="http://51.20.176.13:8000/" method="GET">
+        <button type="button" class="login-btn22 read-more-btn-section font-medium generate_post"> Generate Post
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
